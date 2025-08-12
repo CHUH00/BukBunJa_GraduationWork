@@ -1,0 +1,71 @@
+# ------------------------
+# 공통(모든 OS/에디터)
+# ------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.log
+logs/
+
+# 에디터/IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# ------------------------
+# Node (client 및 하위 패키지 공통)
+# ------------------------
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/.vite/
+**/*.local
+**/logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+**/lerna-debug.log*
+
+# ------------------------
+# Python (server 및 하위 패키지 공통)
+# ------------------------
+**/__pycache__/
+**/*.py[cod]
+.venv/
+venv/
+env/
+server/.venv/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+.tox/
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage/
+htmlcov/
+
+# ------------------------
+# 민감정보 & 대용량 파일
+# ------------------------
+# 모든 .env는 무시하되 샘플만 허용
+*.env
+*.env.*
+!**/.env.example
+
+# CSV 데이터(대용량)
+server/data/*.csv
+
+# ------------------------
+# 빌드 / 배포 산출물
+# ------------------------
+*.zip
+*.tar
+*.gz
