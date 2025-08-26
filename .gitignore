@@ -1,67 +1,49 @@
-# ===== OS / Editor =====
+# OS / Editor
 .DS_Store
 Thumbs.db
-*.swp
-*.swo
 
-# ===== IDE =====
+# IDE
 client/.idea/
 .vscode/
 
-# ===== Python (server) =====
+# Python
 __pycache__/
 *.py[cod]
-*.pyd
-*.pyo
-*.so
 *.egg-info/
 .eggs/
 .mypy_cache/
 .pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
-.cache/
-logs/
-*.log
-
-# Virtualenvs
 .venv/
 server/.venv/
-venv/
 env/
 ENV/
 
-# ===== Node (client) =====
+# Node
 client/node_modules/
 client/dist/
 client/.vite/
 client/.eslintcache
 client/coverage/
 
-# NPM/Yarn/PNPM logs
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# ===== Secrets / Env =====
-# 루트 공통
+# Secrets
 .env
 .env.*
-!.env.example
-
-# client 쪽
+!*.env.example
 client/.env
 client/.env.*
 !client/.env.example
-
-# server 쪽
 server/.env
 server/.env.*
 !server/.env.example
-server/scripts/.env   # 스크립트용 로컬 환경파일
 
-# ===== Data / Artifacts (server) =====
-server/data/*
-!server/data/.keep     # 빈 폴더 유지용 플레이스홀더
+# Data
+server/data/*.log
+server/data/*.tmp
+!server/data/*.csv   # ✅ CSV는 포함
