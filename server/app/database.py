@@ -1,7 +1,6 @@
-# server/app/database.py (최종 수정본)
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String, Date, BigInteger
+from sqlalchemy import create_engine, Column, Integer, String, Date, BigInteger, Float
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 load_dotenv()
@@ -42,6 +41,16 @@ class LottoDraw(Base):
     num5 = Column("당첨번호_5", Integer)
     num6 = Column("당첨번호_6", Integer)
     bonus_number = Column("보너스번호", Integer)
+
+class LottoRetailer(Base):
+    __tablename__ = "lotto_retailers"
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    상호명 = Column("상호명", String(255))
+    소재지 = Column("소재지", String(500))
+    위도 = Column("위도(lat)", Float)
+    경도 = Column("경도(lon)", Float)
+    count = Column("count", BigInteger)
 
 def get_db():
     db = SessionLocal()

@@ -1,11 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import func
 from typing import Optional, List
 
-from ..database import get_db, LottoDraw
+from ..database import get_db, LottoDraw, LottoRetailer  # LottoRetailer 모델도 import 필요
 
 router = APIRouter(prefix="/lotto", tags=["lotto"])
+
+# ==============================
+# 기존 API (번호 관련)
+# ==============================
 
 @router.get("/latest-draw")
 def get_latest_draw(db: Session = Depends(get_db)):
@@ -41,6 +46,7 @@ def get_latest_draw(db: Session = Depends(get_db)):
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"/latest-draw error: {e}")
 
+
 @router.get("/history")
 def history(
     limit: int = Query(10, ge=1, le=200, description="최근 n개"),
@@ -73,6 +79,8 @@ def history(
         ]
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"/history error: {e}")
+
+
 @router.get("/recommend")
 def recommend(n_sets: int = Query(3, ge=1, le=20)):
     """
@@ -86,3 +94,80 @@ def recommend(n_sets: int = Query(3, ge=1, le=20)):
         res.append({"set_id": i + 1, "numbers": [(x + i) % 45 or 45 for x in base]})
 
     return {"count": n_sets, "results": res}
+
+
+# ==============================
+# 신규 API (판매점 관련)
+# ==============================
+
+@router.get("/top-retailers")
+def top_retailers(limit: int = Query(20, ge=1, le=100), db: Session = Depends(get_db)):
+    """
+    전국 판매점 count 기준 상위 랭킹
+    """
+    try:
+        rows = (
+            db.query(
+                LottoRetailer.상호명,
+                LottoRetailer.소재지,
+                LottoRetailer.위도,
+                LottoRetailer.경도,
+                func.count().label("count")
+            )
+            .group_by(LottoRetailer.상호명, LottoRetailer.위도, LottoRetailer.경도, LottoRetailer.소재지)
+            .order_by(func.count().desc())
+            .limit(limit)
+            .all()
+        )
+
+        return [
+            {
+                "상호명": r[0],
+                "소재지": r[1],
+                "위도(lat)": r[2],
+                "경도(lon)": r[3],
+                "count": r[4],
+            }
+            for r in rows
+        ]
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=f"/top-retailers error: {e}")
+
+
+@router.get("/search-retailers")
+def search_retailers(
+    region: str,
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    """
+    특정 지역(주소 포함 검색)에서 판매점 count 순위 조회
+    """
+    try:
+        rows = (
+            db.query(
+                LottoRetailer.상호명,
+                LottoRetailer.소재지,
+                LottoRetailer.위도,
+                LottoRetailer.경도,
+                func.count().label("count")
+            )
+            .filter(LottoRetailer.소재지.like(f"%{region}%"))
+            .group_by(LottoRetailer.상호명, LottoRetailer.위도, LottoRetailer.경도, LottoRetailer.소재지)
+            .order_by(func.count().desc())
+            .limit(limit)
+            .all()
+        )
+
+        return [
+            {
+                "상호명": r[0],
+                "소재지": r[1],
+                "위도(lat)": r[2],
+                "경도(lon)": r[3],
+                "count": r[4],
+            }
+            for r in rows
+        ]
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=f"/search-retailers error: {e}")

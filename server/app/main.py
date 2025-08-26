@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import lotto # lotto 라우터를 임포트합니다.
+from .routers import lotto, retailers
 
 app = FastAPI()
 
@@ -18,7 +18,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 라우터 등록
 app.include_router(lotto.router)
+app.include_router(retailers.router)   # 👉 retailers 라우터 추가
 
 @app.get("/")
 def read_root():
