@@ -1,35 +1,35 @@
 ## 프로젝트 구조
 
 lotto_dashboard/
-├── client/                      # React + Vite 프론트엔드
-│   ├── src/                     # 프론트엔드 소스코드
-│   │   ├── assets/              # 이미지, 아이콘 등 정적 자원
-│   │   ├── components/          # 재사용 가능한 UI 컴포넌트
-│   │   ├── pages/               # 페이지 단위 컴포넌트
-│   │   ├── utils/                # API 호출 등 공통 함수
-│   │   ├── App.jsx               # 라우팅 및 전체 페이지 구성
-│   │   └── main.jsx              # React 앱 진입점
-│   ├── package.json              # 프론트엔드 의존성 및 스크립트
-│   ├── vite.config.js            # Vite 설정 파일
-│   └── ...                       # 환경설정 관련 파일(.eslintrc 등)
-│
-├── server/                       # FastAPI 백엔드
-│   ├── app/                      # 서버 앱 로직
-│   │   ├── routers/              # API 라우터(엔드포인트) 모음
-│   │   ├── database.py           # DB 연결 설정
-│   │   └── main.py               # FastAPI 진입점
-│   ├── data/                     # CSV 데이터 파일 보관 위치
-│   ├── scripts/                  # DB 초기화 및 적재 스크립트
-│   │   └── setup_db.sh           # DB 생성 + CSV 적재 자동화
-│   ├── schema.sql                # DB 테이블 스키마
-│   ├── load_data.sql             # CSV → DB 적재 SQL
-│   ├── requirements.txt          # 백엔드 의존성 패키지
-│   ├── .env                      # (로컬 전용) 민감정보 환경변수
-│   └── .env.example              # 환경변수 샘플 (비밀번호 제외)
-│
-├── .gitignore                    # Git에 포함하지 않을 파일 목록
-├── README.md                     # 프로젝트 설명 문서
-└── ...
+├── client/                      # React + Vite 프론트엔드 <br>
+│   ├── src/                     # 프론트엔드 소스코드 <br>
+│   │   ├── assets/              # 이미지, 아이콘 등 정적 자원 <br>
+│   │   ├── components/          # 재사용 가능한 UI 컴포넌트 <br>
+│   │   ├── pages/               # 페이지 단위 컴포넌트 <br>
+│   │   ├── utils/                # API 호출 등 공통 함수 <br>
+│   │   ├── App.jsx               # 라우팅 및 전체 페이지 구성 <br>
+│   │   └── main.jsx              # React 앱 진입점 <br>
+│   ├── package.json              # 프론트엔드 의존성 및 스크립트 <br>
+│   ├── vite.config.js            # Vite 설정 파일 <br>
+│   └── ...                       # 환경설정 관련 파일(.eslintrc 등) <br>
+│ <br>
+├── server/                       # FastAPI 백엔드 <br>
+│   ├── app/                      # 서버 앱 로직 <br>
+│   │   ├── routers/              # API 라우터(엔드포인트) 모음 <br>
+│   │   ├── database.py           # DB 연결 설정 <br>
+│   │   └── main.py               # FastAPI 진입점 <br>
+│   ├── data/                     # CSV 데이터 파일 보관 위치 <br>
+│   ├── scripts/                  # DB 초기화 및 적재 스크립트 <br>
+│   │   └── setup_db.sh           # DB 생성 + CSV 적재 자동화 <br>
+│   ├── schema.sql                # DB 테이블 스키마 <br>
+│   ├── load_data.sql             # CSV → DB 적재 SQL <br>
+│   ├── requirements.txt          # 백엔드 의존성 패키지 <br>
+│   ├── .env                      # (로컬 전용) 민감정보 환경변수 <br>
+│   └── .env.example              # 환경변수 샘플 (비밀번호 제외) <br>
+│ <br>
+├── .gitignore                    # Git에 포함하지 않을 파일 목록 <br>
+├── README.md                     # 프로젝트 설명 문서 <br>
+└── ... <br>
 
 ## 환경 변수 관리
 
