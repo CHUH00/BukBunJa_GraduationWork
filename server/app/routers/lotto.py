@@ -4,13 +4,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import func
 from typing import Optional, List
 
-from ..database import get_db, LottoDraw, LottoRetailer  # LottoRetailer 모델도 import 필요
+from ..database import get_db, LottoDraw, LottoRetailer
 
 router = APIRouter(prefix="/lotto", tags=["lotto"])
-
-# ==============================
-# 기존 API (번호 관련)
-# ==============================
 
 @router.get("/latest-draw")
 def get_latest_draw(db: Session = Depends(get_db)):
@@ -49,11 +45,14 @@ def get_latest_draw(db: Session = Depends(get_db)):
 
 @router.get("/history")
 def history(
-    limit: int = Query(2000, ge=1, description="최근 n개"),
-    db: Session = Depends(get_db)
+        limit: Optional[int] = Query(None, ge=1, description="최근 n개"),
+        db: Session = Depends(get_db)
 ):
     try:
-        rows = db.query(LottoDraw).order_by(LottoDraw.draw_number.desc()).limit(limit).all()
+        query = db.query(LottoDraw).order_by(LottoDraw.draw_number.desc())
+        if limit:
+            query = query.limit(limit)
+        rows = query.all()
 
         return [
             {
@@ -80,6 +79,7 @@ def history(
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"/history error: {e}")
 
+
 @router.get("/recommend")
 def recommend(n_sets: int = Query(3, ge=1, le=20)):
     """
@@ -93,11 +93,6 @@ def recommend(n_sets: int = Query(3, ge=1, le=20)):
         res.append({"set_id": i + 1, "numbers": [(x + i) % 45 or 45 for x in base]})
 
     return {"count": n_sets, "results": res}
-
-
-# ==============================
-# 신규 API (판매점 관련)
-# ==============================
 
 @router.get("/top-retailers")
 def top_retailers(limit: int = Query(20, ge=1, le=100), db: Session = Depends(get_db)):
@@ -135,9 +130,9 @@ def top_retailers(limit: int = Query(20, ge=1, le=100), db: Session = Depends(ge
 
 @router.get("/search-retailers")
 def search_retailers(
-    region: str,
-    limit: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db)
+        region: str,
+        limit: int = Query(20, ge=1, le=100),
+        db: Session = Depends(get_db)
 ):
     """
     특정 지역(주소 포함 검색)에서 판매점 count 순위 조회
@@ -170,24 +165,24 @@ def search_retailers(
         ]
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"/search-retailers error: {e}")
-    
+
+
 @router.get("/draws")
 def get_draws(
-    limit: int = Query(2000, ge=1, description="최근 n개(오래된 순으로 정렬)"),
-    db: Session = Depends(get_db)
+        limit: int = Query(2000, ge=1, description="최근 n개(오래된 순으로 정렬)"),
+        db: Session = Depends(get_db)
 ):
     try:
         rows = (
             db.query(LottoDraw)
-              .order_by(LottoDraw.draw_number.asc())  # 오래된 → 최신
-              .limit(limit)
-              .all()
+            .order_by(LottoDraw.draw_number.asc())
+            .limit(limit)
+            .all()
         )
 
         out = []
         for r in rows:
             d = r.draw_date
-            # draw_date가 date/datetime/str 어떤 타입이어도 처리
             if hasattr(d, "isoformat"):
                 draw_date = d.isoformat()
                 year = getattr(d, "year", int(str(d)[:4]))

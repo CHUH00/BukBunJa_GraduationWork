@@ -9,11 +9,11 @@ export default function DrawsPage() {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        getHistory()
+        getHistory(2000)
             .then(data => {
                 console.log("전체 회차 데이터:", data);
                 setList(data);
-                setSelected(data[0]); // 최신 회차 기본 선택
+                setSelected(data[0]);
             })
             .catch(e => setErr(e.message));
     }, []);
@@ -28,7 +28,7 @@ export default function DrawsPage() {
         if (found) {
             setSelected(found);
         } else {
-            alert("최근 5회차만 조회 가능합니다.");
+            alert("해당 회차를 찾을 수 없습니다.");
         }
     };
 
@@ -98,14 +98,14 @@ export default function DrawsPage() {
                     }}
                 >
                     <h2 style={{ marginBottom: 50, textAlign: "center" }}>
-                        <span style={{ color: "#7a0e0e", fontSize: 30 }}>{selected.draw_number}회차 </span> 
-                        <span style={{ fontSize: 30 }}>로또6/45 당첨 결과</span><br></br>
+                        <span style={{ color: "#7a0e0e", fontSize: 30 }}>{selected.draw_number}회차 </span>
+                        <span style={{ fontSize: 30 }}>로또 6/45 당첨 결과</span><br></br>
                         <span style={{fontSize: 16, color: "#666" }}>
                             ({selected.draw_date} 추첨)
                         </span>
                     </h2>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 50, justifyContent: "center" }}>                        
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 50, justifyContent: "center" }}>
                         {selected.numbers.map((n, i) => (
                             <LottoBall key={i} number={n} />
                         ))}
@@ -115,67 +115,67 @@ export default function DrawsPage() {
 
                     <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 20 }}>
                         <thead>
-                            <tr>
-                                <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>순위</th>
-                                <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>당첨자 수</th>
-                                <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>총 당첨금액</th>
-                                <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>1게임당 당첨금액</th>
-                                <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>당첨기준</th>
-                            </tr>
+                        <tr>
+                            <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>순위</th>
+                            <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>당첨자 수</th>
+                            <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>총 당첨금액</th>
+                            <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>1게임당 당첨금액</th>
+                            <th style={{ borderBottom: "1px solid #eee", padding: 8 }}>당첨기준</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {[1,2,3,4,5].map(rank => {
-                                let winnersKey = "";
-                                let amountKey = "";
-                                let criteria = "";
-                                switch(rank) {
-                                    case 1:
-                                        winnersKey = "first_prize_winners";
-                                        amountKey = "first_prize_amount";
-                                        criteria = "당첨번호 6개 숫자일치";
-                                        break;
-                                    case 2:
-                                        winnersKey = "second_prize_winners";
-                                        amountKey = "second_prize_amount";
-                                        criteria = "당첨번호 5개 숫자일치 + 보너스 숫자일치";
-                                        break;
-                                    case 3:
-                                        winnersKey = "third_prize_winners";
-                                        amountKey = "third_prize_amount";
-                                        criteria = "당첨번호 5개 숫자일치";
-                                        break;
-                                    case 4:
-                                        winnersKey = "fourth_prize_winners";
-                                        amountKey = "fourth_prize_amount";
-                                        criteria = "당첨번호 4개 숫자일치";
-                                        break;
-                                    case 5:
-                                        winnersKey = "fifth_prize_winners";
-                                        amountKey = "fifth_prize_amount";
-                                        criteria = "당첨번호 3개 숫자일치";
-                                        break;
-                                }
-                                const winners = Number(selected[winnersKey]);
-                                const amount = Number(selected[amountKey]);
-                                const totalAmount = winners && amount ? winners * amount : 0;
-                                return (
-                                    <tr key={rank}>
-                                        <td style={{ padding: 8, textAlign: "center" }}>{rank}등</td>
-                                        <td style={{ padding: 8, textAlign: "center" }}>
-                                            {winners ? winners.toLocaleString() : "-"}
-                                        </td>
-                                        <td style={{ padding: 8, textAlign: "center" }}>
-                                            {totalAmount ? totalAmount.toLocaleString() + "원" : "-"}
-                                        </td>
-                                        <td style={{ padding: 8, textAlign: "center" }}>
-                                            {amount ? amount.toLocaleString() + "원" : "-"}
-                                        </td>
-                                        <td style={{ padding: 8, textAlign: "center" }}>
-                                            {criteria}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                        {[1,2,3,4,5].map(rank => {
+                            let winnersKey = "";
+                            let amountKey = "";
+                            let criteria = "";
+                            switch(rank) {
+                                case 1:
+                                    winnersKey = "first_prize_winners";
+                                    amountKey = "first_prize_amount";
+                                    criteria = "당첨번호 6개 숫자일치";
+                                    break;
+                                case 2:
+                                    winnersKey = "second_prize_winners";
+                                    amountKey = "second_prize_amount";
+                                    criteria = "당첨번호 5개 숫자일치 + 보너스 숫자일치";
+                                    break;
+                                case 3:
+                                    winnersKey = "third_prize_winners";
+                                    amountKey = "third_prize_amount";
+                                    criteria = "당첨번호 5개 숫자일치";
+                                    break;
+                                case 4:
+                                    winnersKey = "fourth_prize_winners";
+                                    amountKey = "fourth_prize_amount";
+                                    criteria = "당첨번호 4개 숫자일치";
+                                    break;
+                                case 5:
+                                    winnersKey = "fifth_prize_winners";
+                                    amountKey = "fifth_prize_amount";
+                                    criteria = "당첨번호 3개 숫자일치";
+                                    break;
+                            }
+                            const winners = Number(selected[winnersKey]);
+                            const amount = Number(selected[amountKey]);
+                            const totalAmount = winners && amount ? winners * amount : 0;
+                            return (
+                                <tr key={rank}>
+                                    <td style={{ padding: 8, textAlign: "center" }}>{rank}등</td>
+                                    <td style={{ padding: 8, textAlign: "center" }}>
+                                        {winners ? winners.toLocaleString() : "-"}
+                                    </td>
+                                    <td style={{ padding: 8, textAlign: "center" }}>
+                                        {totalAmount ? totalAmount.toLocaleString() + "원" : "-"}
+                                    </td>
+                                    <td style={{ padding: 8, textAlign: "center" }}>
+                                        {amount ? amount.toLocaleString() + "원" : "-"}
+                                    </td>
+                                    <td style={{ padding: 8, textAlign: "center" }}>
+                                        {criteria}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                         </tbody>
                     </table>
                     <div style={{ marginTop: 30 }}>

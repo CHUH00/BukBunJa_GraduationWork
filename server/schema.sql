@@ -8,7 +8,6 @@ CREATE DATABASE IF NOT EXISTS lotto_db
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
   
-drop database lotto_db;
 
 USE lotto_db;
 
@@ -23,6 +22,37 @@ CREATE TABLE IF NOT EXISTS User (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
+ALTER TABLE `User`
+  ADD COLUMN `privacy_agree` TINYINT(1) NOT NULL DEFAULT 0 AFTER `phone`;
+
+-- 바뀔 대상 확인
+SELECT user_id, email FROM `User`
+WHERE email LIKE '%@placeholder.local';
+
+-- 세션에서만 끄기
+SET SQL_SAFE_UPDATES = 0;
+
+-- 업데이트 실행
+UPDATE `User`
+SET email = REPLACE(email, '@placeholder.local', '@noreply.social')
+WHERE email LIKE '%@placeholder.local';
+
+-- 다시 켜기(선택)
+SET SQL_SAFE_UPDATES = 1;
+
+
+
+-- 네이버, 카카오 사용자 정보
+CREATE TABLE IF NOT EXISTS SocialAccount (
+    social_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    provider ENUM('naver','kakao') NOT NULL,
+    provider_uid VARCHAR(128) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_provider (provider, provider_uid),
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+  
 -- 2. LottoDraw – 회차별 당첨번호 및 당첨 정보
 CREATE TABLE IF NOT EXISTS LottoDraw (
     년도 INT,
@@ -47,22 +77,22 @@ CREATE TABLE IF NOT EXISTS LottoDraw (
     보너스번호 INT
 ) ENGINE=InnoDB;
 
--- INSERT INTO LottoDraw
--- (년도, 회차, 추첨일,
---  `당첨자수_1`, `당첨금액_1`,
---  `당첨자수_2`, `당첨금액_2`,
---  `당첨자수_3`, `당첨금액_3`,
---  `당첨자수_4`, `당첨금액_4`,
---  `당첨자수_5`, `당첨금액_5`,
---  `당첨번호_1`, `당첨번호_2`, `당첨번호_3`,
---  `당첨번호_4`, `당첨번호_5`, `당첨번호_6`,
---  보너스번호)
--- VALUES
--- (2025,1187,'2025-08-30',11,2619380012,79,60787300,3147,1525961,152448,50000,2557090,5000,5,13,26,29,37,40,42),
--- (2025,1186,'2025-08-23',14,1985676911,89,52058946,3226,1436221,162707,50000,2628810,5000,2,8,13,16,23,28,35),
--- (2025,1185,'2025-08-16',12,2388695125,79,60473295,2903,1645674,153798,50000,2566276,5000,6,17,22,28,29,32,38);
+INSERT INTO LottoDraw
+(년도, 회차, 추첨일,
+ `당첨자수_1`, `당첨금액_1`,
+ `당첨자수_2`, `당첨금액_2`,
+ `당첨자수_3`, `당첨금액_3`,
+ `당첨자수_4`, `당첨금액_4`,
+ `당첨자수_5`, `당첨금액_5`,
+ `당첨번호_1`, `당첨번호_2`, `당첨번호_3`,
+ `당첨번호_4`, `당첨번호_5`, `당첨번호_6`,
+ 보너스번호)
+VALUES
+(2025,1187,'2025-08-30',11,2619380012,79,60787300,3147,1525961,152448,50000,2557090,5000,5,13,26,29,37,40,42),
+(2025,1186,'2025-08-23',14,1985676911,89,52058946,3226,1436221,162707,50000,2628810,5000,2,8,13,16,23,28,35),
+(2025,1185,'2025-08-16',12,2388695125,79,60473295,2903,1645674,153798,50000,2566276,5000,6,17,22,28,29,32,38);
 
--- select * from LottoDraw;
+select * from LottoDraw;
 
 -- 3. Prediction – AI 추천 설정값
 CREATE TABLE IF NOT EXISTS Prediction (
@@ -131,4 +161,3 @@ CREATE TABLE lotto_retailers (
     count INT DEFAULT 0
 );
 select * from lotto_retailers;
-drop table lotto_retailers;

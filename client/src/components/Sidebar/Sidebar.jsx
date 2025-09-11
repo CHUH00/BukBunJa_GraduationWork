@@ -1,125 +1,144 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useMemo, useState, useEffect } from "react";
+import styles from "./Sidebar.module.css";
+import logo from "../../assets/logo.png";
 
-const menus = [
-    { label: "메인 대시보드", path: "/" },
-    { label: "마이페이지", path: "/mypage" },
-    {
+export default function Sidebar({ user, onLogout }) {
+  const { pathname } = useLocation();
+  const nav = useNavigate();
+
+  const [openMenu, setOpenMenu] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem("access_token"));
+
+  useEffect(() => {
+    const onStorage = () => setToken(localStorage.getItem("access_token"));
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  useEffect(() => {
+    setToken(localStorage.getItem("access_token"));
+  }, [pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    setToken(null);
+    nav("/login");
+  };
+
+  const baseMenus = useMemo(
+    () => ([
+      { label: "메인 대시보드", path: "/" },
+      { label: "AI 기반 추천", path: "/lotto/recommend" },
+      { label: "당첨 판매점 조회", path: "/retailers/top" },
+      {
         label: "로또 번호 분석",
         children: [
-            { label: "번호 통계 분석", path: "/compare/Analysis" },
-            { label: "회차별 당첨번호 조회", path: "/compare/Draws" },
-            { label: "회차별 분석 결과 비교", path: "/compare/compare" },
+          { label: "번호 통계 분석", path: "/compare/Analysis" },
+          { label: "회차별 당첨번호 조회", path: "/compare/Draws" },
+          { label: "회차별 분석 결과 비교", path: "/compare/compare" },
         ],
-    },
-    { label: "AI 기반 추천", path: "/lotto/recommend" },
-    {
-        label: "로또 판매점 조회",
-        children: [
-            { label: "당첨 판매점 조회", path: "/retailers/top" },
-            { label: "위치 기반 판매점 추천", path: "/retailers/nearby" },
-        ],
-    },
-    {
+      },
+      {
         label: "로또가이드",
         children: [
-            { label: "로또 6/45 소개", path: "/guide/intro" },
-            { label: "구매하기", path: "/guide/purchase" },
-            { label: "구매방법", path: "/guide/how-to-buy" },
-            { label: "추첨 안내", path: "/guide/draw-info" },
+          { label: "로또 6/45 소개", path: "/guide/intro" },
+          { label: "구매하기", path: "/guide/purchase" },
+          { label: "구매방법", path: "/guide/how-to-buy" },
+          { label: "추첨 안내", path: "/guide/draw-info" },
         ],
-    },
-];
+      },
+    ]),
+    []
+  );
 
-export default function Sidebar() {
-    const { pathname } = useLocation();
-    const [openMenu, setOpenMenu] = useState(null);
-
-    const renderMenu = (menu) => {
-        // 드롭다운 있는 메뉴
-        if (menu.children) {
-            const isOpen = openMenu === menu.label;
-            return (
-                <div key={menu.label}>
-                    <div
-                        onClick={() =>
-                            setOpenMenu(isOpen ? null : menu.label)
-                        }
-                        style={{
-                            cursor: "pointer",
-                            padding: "10px 12px",
-                            borderRadius: 8,
-                            color: isOpen ? "#7a0e0e" : "#6b6b6b",
-                            // background: isOpen ? "#ffe1e1" : "transparent",
-                            fontWeight: isOpen ? 700 : 400,
-                            userSelect: "none",
-                        }}
-                    >
-                        {isOpen ? "▼ " : "▶ "} {menu.label}
-                    </div>
-                    {isOpen && (
-                        <div style={{ marginLeft: 16, display: "flex", flexDirection: "column", gap: 6 }}>
-                            {menu.children.map((sub) => {
-                                const active = pathname === sub.path;
-                                return (
-                                    <NavLink
-                                        key={sub.path}
-                                        to={sub.path}
-                                        style={{
-                                            textDecoration: "none",
-                                            padding: "8px 12px",
-                                            borderRadius: 8,
-                                            color: active ? "#7a0e0e" : "#6b6b6b",
-                                            background: active ? "#ffe1e1" : "transparent",
-                                            fontWeight: active ? 700 : 400,
-                                        }}
-                                    >
-                                        {sub.label}
-                                    </NavLink>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // 일반 메뉴
-        const active = pathname === menu.path;
-        return (
-            <NavLink
-                key={menu.path}
-                to={menu.path}
-                style={{
-                    textDecoration: "none",
-                    padding: "10px 12px",
-                    borderRadius: 8,
-                    color: active ? "#7a0e0e" : "#6b6b6b",
-                    // background: active ? "#ffe1e1" : "transparent",
-                    fontWeight: active ? 700 : 400,
-                }}
-            >
-                {menu.label}
-            </NavLink>
-        );
+  const authMenu = useMemo(() => {
+    if (!token) return { label: "로그인/회원가입", path: "/login" };
+    return {
+      label: "마이페이지",
+      children: [
+        { label: "분석 이력 조회", path: "/mypage" },
+        { label: "계정 설정", path: "/mypage/account" },
+        { label: "로그아웃", action: handleLogout },
+      ],
     };
+  }, [token]);
+
+  const menus = useMemo(() => [baseMenus[0], authMenu, ...baseMenus.slice(1)], [authMenu, baseMenus]);
+
+  const renderMenu = (menu) => {
+    if (menu.children) {
+      const isOpen = openMenu === menu.label;
+      return (
+        <div key={menu.label}>
+          <div
+            onClick={() => setOpenMenu(isOpen ? null : menu.label)}
+            className={`${styles.menuHeader} ${isOpen ? styles.menuHeaderOpen : ""}`}
+          >
+            {isOpen ? "▼ " : "▶ "} {menu.label}
+          </div>
+
+          {isOpen && (
+            <div className={styles.children}>
+              {menu.children.map((sub) => {
+                if (sub.action) {
+                  return (
+                    <button
+                      key={`${menu.label}-action-${sub.label}`}
+                      onClick={sub.action}
+                      className={styles.actionBtn}
+                    >
+                      {sub.label}
+                    </button>
+                  );
+                }
+                return (
+                  <NavLink
+                    key={sub.path}
+                    to={sub.path}
+                    end={sub.path === "/mypage"}
+                    className={({ isActive }) =>
+                      `${styles.sublink} ${isActive ? styles.sublinkActive : ""}`
+                    }
+                  >
+                    {sub.label}
+                  </NavLink>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    }
 
     return (
-        <aside
-            style={{
-                width: 240,
-                flexShrink: 0,
-                background: "#fff",
-                borderRight: "1px solid #f0e0e0",
-                padding: "20px 14px",
-            }}
-        >
-            <div style={{ fontWeight: 800, marginBottom: 18, color: "#7a0e0e" }}>
-                복권을 분석하는 자들
-            </div>
-            <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {menus.map(renderMenu)}
-            </nav>
-        </aside>
+      <NavLink
+        key={menu.path}
+        to={menu.path}
+        className={({ isActive }) => `${styles.link} ${isActive ? styles.activeLink : ""}`}
+      >
+        {menu.label}
+      </NavLink>
     );
+  };
+
+return (
+  <aside className={styles.aside}>
+    {/* 상단 로고 */}
+    <div className={styles.logo} onClick={() => nav("/")}>
+      <img src={logo} alt="로고" />
+    </div>
+
+    {/* 메뉴 */}
+    <nav className={styles.nav}>
+      {menus.map(renderMenu)}
+    </nav>
+
+    {/* 푸터 */}
+    <div className={styles.footer}>
+      © 2025 복권을 분석하는 자들.<br />
+      All Right Reserved.
+    </div>
+  </aside>
+);
 }
