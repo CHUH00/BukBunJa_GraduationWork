@@ -1,11 +1,10 @@
 import React, { useMemo, useState } from "react";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
-  LineChart, Line, PieChart, Pie, Cell, Legend, Brush, AreaChart, Area
+  LineChart, Line, PieChart, Pie, Cell, Legend
 } from "recharts";
 import useLottoStats from "../../hooks/useLottoStats";
 import { ACCENT } from "../../lib/lottoStats";
-import aiImg from "../../assets/image/5.png";
 
 const GAP = 15;
 const PAD_V = 20;
@@ -23,19 +22,13 @@ const SUB   = { fontSize: 11, color: "#a04d51", margin: "0 0 8px" };
 
 const RESULT = {
   wrap: { display: "flex", flexDirection: "column", gap: 10 },
-  title: { fontSize: 22, fontWeight: 900, color: "#2b0d0e", letterSpacing: -0.3, margin: 8 },
+  title: { fontSize: 22, fontWeight: 900, color: "#2b0d0e", letterSpacing: -0.3, margin: 0 },
   date:  { fontSize: 14, color: "#a1696d", marginTop: 2 },
   bar: {
     background: "#7e2e32", color: "#fff", borderRadius: 16, padding: "25px 25px",
     display: "flex", gap: 20, alignItems: "center", justifyContent: "center", width: "100%", boxSizing: "border-box"
   },
   plus: { fontSize: 24, fontWeight: 900, margin: "0 6px" }
-};
-
-const fmtMonth = (s) => {
-  if (!s) return "";
-  const [y, m] = String(s).split("-");
-  return `${y}-${m}`;
 };
 
 function ballSkin(hex) {
@@ -347,101 +340,22 @@ export default function MainPage() {
 
               <div style={{ flex: 1, minHeight: 0 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                   <LineChart
-                     data={monthlyData}
-                     margin={{ top: 10, right: 10, left: 0, bottom: 20 }} // 브러시 공간 확보
-                   >
-                     <CartesianGrid strokeDasharray="3 3" />
-                     <XAxis
-                       dataKey="name"
-                       tick={{ fontSize: 10 }}
-                       tickFormatter={fmtMonth}
-                       interval="preserveStartEnd"
-                       minTickGap={20}
-                     />
-                     <YAxis allowDecimals={false} domain={[0, 'dataMax+1']} />
-                     <Tooltip
-                       formatter={(v) => [`${v}회`, `${selNum}번`]}
-                       labelFormatter={(label) => fmtMonth(label)}
-                     />
-                     <Line
-                       type="monotone"
-                       dataKey="value"
-                       name={`${selNum}번`}
-                       dot={false}
-                       activeDot={{ r: 3 }}
-                       stroke={ACCENT}
-                       strokeWidth={2}
-                     />
-                     <Brush
-                       dataKey="name"
-                       height={30}
-                       stroke={ACCENT}
-                       fill="rgba(156,61,65,0.09)"        // 브러시 영역 배경
-                       travellerWidth={12}                 // 핸들 넓이
-                       tickFormatter={fmtMonth}
-                       startIndex={Math.max(0, monthlyData.length - 24)}  // 기본: 최근 24개월
-                       endIndex={monthlyData.length - 1}
-                     >
-                       <AreaChart data={monthlyData}>
-                         <defs>
-                           <linearGradient id="miniGrad" x1="0" y1="0" x2="0" y2="1">
-                             <stop offset="0%" stopColor={ACCENT} stopOpacity="0.55" />
-                             <stop offset="100%" stopColor={ACCENT} stopOpacity="0.05" />
-                           </linearGradient>
-                         </defs>
-                         <Area type="monotone" dataKey="value" stroke={ACCENT} fill="url(#miniGrad)" />
-                       </AreaChart>
-                     </Brush>
-                   </LineChart>
+                  <LineChart data={monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                    <YAxis allowDecimals={false} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" name={`${selNum}번`} dot={false} stroke={ACCENT} />
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             <div style={CARD}>
               <div style={TITLE}>AI 기반 로또 번호 추천</div>
-              <p style={{ color: "#7a6a6a", marginTop: 0, marginBottom: 12 }}>
-                다음 회차를 위한 추천 번호를 받아보세요.
-              </p>
-
-              <div
-                style={{
-                  position: "relative",
-                  borderRadius: 12,
-                  overflow: "hidden",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-                  marginBottom: 8,
-                }}
-              >
-                <img
-                  src={aiImg}
-                  alt="AI 추천 일러스트"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    height: "auto",
-                    objectFit: "cover",
-                  }}
-                />
-
-                <button
-                  type="button"
-                  onClick={() => alert("추천 로직 연결 필요")}
-                  style={{
-                    position: "absolute",
-                    top: "35%",     // ← 막대 왼쪽 대각선 위에 맞춰 조정
-                    left: "20%",    // ← 좌표 조절
-                    transform: "translate(-50%, -50%)",
-                    padding: "10px 16px",
-                    borderRadius: 12,
-                    background: "#8b1d1d",
-                    color: "#fff",
-                    fontWeight: 800,
-                    border: "none",
-                    cursor: "pointer",
-                    boxShadow: "0 6px 18px rgba(139,29,29,0.25)"
-                  }}
-                >
+              <p style={{ color: "#7a6a6a", marginTop: 0, marginBottom: 8 }}>다음 회차를 위한 추천 번호를 받아보세요.</p>
+              <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+                <button type="button" onClick={() => alert("추천 로직 연결 필요")} style={{ padding: "10px 16px", borderRadius: 12, background: "#8b1d1d", color: "#fff", fontWeight: 800, border: "none", cursor: "pointer" }}>
                   AI 추천
                 </button>
               </div>

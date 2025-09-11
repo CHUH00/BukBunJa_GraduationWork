@@ -9,7 +9,7 @@ export default function DrawsPage() {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        getHistory()
+        getHistory(2000)
             .then(data => {
                 console.log("전체 회차 데이터:", data);
                 setList(data);
@@ -28,7 +28,7 @@ export default function DrawsPage() {
         if (found) {
             setSelected(found);
         } else {
-            alert("최근 5회차만 조회 가능합니다.");
+            alert("해당 회차를 찾을 수 없습니다.");
         }
     };
 
@@ -99,7 +99,7 @@ export default function DrawsPage() {
                 >
                     <h2 style={{ marginBottom: 50, textAlign: "center" }}>
                         <span style={{ color: "#7a0e0e", fontSize: 30 }}>{selected.draw_number}회차 </span> 
-                        <span style={{ fontSize: 30 }}>로또6/45 당첨 결과</span><br></br>
+                        <span style={{ fontSize: 30 }}>로또 6/45 당첨 결과</span><br></br>
                         <span style={{fontSize: 16, color: "#666" }}>
                             ({selected.draw_date} 추첨)
                         </span>

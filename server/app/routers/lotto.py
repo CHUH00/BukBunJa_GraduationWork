@@ -49,11 +49,14 @@ def get_latest_draw(db: Session = Depends(get_db)):
 
 @router.get("/history")
 def history(
-    limit: int = Query(2000, ge=1, description="최근 n개"),
+    limit: Optional[int] = Query(None, ge=1, description="최근 n개"),
     db: Session = Depends(get_db)
 ):
     try:
-        rows = db.query(LottoDraw).order_by(LottoDraw.draw_number.desc()).limit(limit).all()
+        query = db.query(LottoDraw).order_by(LottoDraw.draw_number.desc())
+        if limit:
+            query = query.limit(limit)
+        rows = query.all()
 
         return [
             {
@@ -187,7 +190,6 @@ def get_draws(
         out = []
         for r in rows:
             d = r.draw_date
-            # draw_date가 date/datetime/str 어떤 타입이어도 처리
             if hasattr(d, "isoformat"):
                 draw_date = d.isoformat()
                 year = getattr(d, "year", int(str(d)[:4]))
@@ -199,6 +201,8 @@ def get_draws(
                 "회차": r.draw_number,
                 "추첨일": draw_date,
                 "년도": year,
+
+                # ✅ 번호/보너스
                 "당첨번호_1": r.num1,
                 "당첨번호_2": r.num2,
                 "당첨번호_3": r.num3,
@@ -206,6 +210,20 @@ def get_draws(
                 "당첨번호_5": r.num5,
                 "당첨번호_6": r.num6,
                 "보너스번호": r.bonus_number,
+
+                # ✅ 반드시 포함: 1등 승자/금액 (프런트 통계가 이 키를 읽음)
+                "당첨자수_1": r.first_prize_winners,
+                "당첨금액_1": int(r.first_prize_amount) if r.first_prize_amount is not None else None,
+
+                # (선택) 2~5등도 쓰려면 같이 내려줘도 됨
+                "당첨자수_2": r.second_prize_winners,
+                "당첨금액_2": int(r.second_prize_amount) if r.second_prize_amount is not None else None,
+                "당첨자수_3": r.third_prize_winners,
+                "당첨금액_3": int(r.third_prize_amount) if r.third_prize_amount is not None else None,
+                "당첨자수_4": r.fourth_prize_winners,
+                "당첨금액_4": int(r.fourth_prize_amount) if r.fourth_prize_amount is not None else None,
+                "당첨자수_5": r.fifth_prize_winners,
+                "당첨금액_5": int(r.fifth_prize_amount) if r.fifth_prize_amount is not None else None,
             })
         return out
     except SQLAlchemyError as e:
