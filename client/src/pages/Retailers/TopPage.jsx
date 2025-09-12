@@ -21,8 +21,8 @@ export default function TopPage() {
     return (
         <div style={{ display: "flex", height: "100vh" }}>
             {/* 왼쪽 리스트 */}
-            <div style={{ flex: 1, overflowY: "scroll", padding: 20, background: "#fafafa", borderRight: "1px solid #ddd" }}>
-                <h2 style={{ marginBottom: 10 }}>당첨 판매점 조회</h2>
+            <div style={{ flex: 1, overflowY: "scroll", padding: 20, background: "#fdecee", borderRight: "1px solid #ddd" }}>
+                <h1 style={{ fontSize: "40px", fontWeight:800}}>당첨 판매점 조회</h1>
 
                 {/* 검색창 */}
                 <div style={{ display: "flex", marginBottom: 20 }}>

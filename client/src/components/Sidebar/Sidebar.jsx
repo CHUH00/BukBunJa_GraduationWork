@@ -21,9 +21,11 @@ export default function Sidebar({ user, onLogout }) {
   }, [pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    setToken(null);
-    nav("/login");
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("access_token");
+      setToken(null);
+      nav("/login");
+    }
   };
 
   const baseMenus = useMemo(
@@ -44,7 +46,7 @@ export default function Sidebar({ user, onLogout }) {
         children: [
           { label: "로또 6/45 소개", path: "/guide/intro" },
           { label: "구매하기", path: "/guide/purchase" },
-          { label: "구매방법", path: "/guide/how-to-buy" },
+          { label: "구매 방법", path: "/guide/how-to-buy" },
           { label: "추첨 안내", path: "/guide/draw-info" },
         ],
       },

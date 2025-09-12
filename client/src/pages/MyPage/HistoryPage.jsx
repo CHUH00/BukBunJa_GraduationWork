@@ -2,7 +2,7 @@ import React from "react";
 
 export default function HistoryPage() {
   return (
-    <div style={{ padding: 16 }}>
+    <div style={{ padding: 16, backgroundColor: "#fdecee", minHeight: "100vh" }}>
       <div
         style={{
           maxWidth: 720,

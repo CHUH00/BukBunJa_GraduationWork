@@ -65,7 +65,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.twoColWrap}>
+    <div className={styles.twoColWrap} style={{ backgroundColor: "#fdecee" }}>
       <section className={styles.leftPane}>
         <form onSubmit={onSubmit} className={styles.card}>
           <h2 className={styles.title}>로그인</h2>

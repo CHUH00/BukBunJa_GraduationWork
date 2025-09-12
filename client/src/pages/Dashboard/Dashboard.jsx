@@ -122,7 +122,8 @@ export default function MainPage() {
     <div style={PAGE}>
       <div style={INNER}>
         <div style={HEADER}>
-          <h2 style={{ margin: 0, fontWeight: 900, color: "#2e0c0c", fontSize: 20 }}>메인 대시보드</h2>
+          <h1 style={{ fontSize: "40px", fontWeight:800}}>복권을 분석하는 자들</h1>
+
         </div>
 
         <div style={ROWS}>

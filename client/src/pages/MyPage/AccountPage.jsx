@@ -165,7 +165,7 @@ export default function AccountPage() {
   if (!me) return null;
 
   return (
-    <div className={styles.twoColWrap}>
+    <div className={styles.twoColWrap} style={{ backgroundColor: "#fdecee", minHeight: "100vh" }}>
       <section className={styles.leftPane}>
         <form onSubmit={onSubmit} className={styles.card}>
           <h2 className={styles.title}>계정 설정</h2>

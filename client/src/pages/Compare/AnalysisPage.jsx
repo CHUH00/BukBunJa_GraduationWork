@@ -442,9 +442,10 @@ export default function AnalysisPage({ fetchUrl = "/lotto/draws", rows }) {
     <div style={PAGE}>
       <div style={INNER}>
         <div style={HEAD}>
-          <h2 style={{ margin:0, fontWeight:800 }}>
-            🎯 번호 통계 분석
-          </h2>
+          
+          <h1 style={{ margin:0, fontSize: "40px", fontWeight:800 }}>
+            번호 통계 분석
+          </h1>
           <p style={{ margin:"6px 0 0 0", color:"#7f1d1d", fontSize:13 }}>
             9가지 기준으로 로또 번호 데이터를 분석한 대시보드
           </p>

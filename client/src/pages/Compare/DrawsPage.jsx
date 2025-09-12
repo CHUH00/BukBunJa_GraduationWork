@@ -42,9 +42,8 @@ export default function DrawsPage() {
     };
 
     return (
-        <div style={{ padding: 20 }}>
-            <h1>회차별 당첨번호 조회</h1>
-
+        <div style={{ backgroundColor: "#fdecee", minHeight: "100vh", padding: 20, boxSizing: "border-box" }}>
+            <h1 style={{ fontSize: "40px", fontWeight:800  }}>회차별 당첨번호 조회</h1>
             <div style={{ marginBottom: 20, display: "flex", gap: 8, justifyContent: "flex-end" }}>
                 <input
                     type="text"
