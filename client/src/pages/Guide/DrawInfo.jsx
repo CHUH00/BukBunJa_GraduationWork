@@ -6,11 +6,11 @@ export default function DrawInfo() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <div style={{ padding: "20px", background: "#ffffffff", borderRadius: "12px",boxShadow: "0 2px 6px rgba(0,0,0,0.1)" }}>
-        <h1>추첨 안내</h1>
+    <div style={{ padding: "20px", backgroundColor: "#fdecee", borderRadius: "12px", minHeight: "100vh", boxSizing: "border-box" }}>
+      <h1 style={{ fontSize: "40px", fontWeight:800 }}>추첨 안내</h1>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", marginTop: "20px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", marginTop: "20px" }}>
+        <div>
           <section style={{ background: "#f9f9f9", padding: "20px", borderRadius: "12px", boxShadow: "0 2px 6px rgba(0,0,0,0.1)" }}>
             <h2 style={{ fontWeight: "bold" }}>🗓️ 추첨 일정 및 방송</h2>
             <ul>
@@ -18,7 +18,9 @@ export default function DrawInfo() {
               <li>MBC 방송국 스튜디오에서 생방송 진행</li>
             </ul>
           </section>
+        </div>
 
+        <div>
           <section style={{ background: "#f9f9f9", padding: "20px", borderRadius: "12px", boxShadow: "0 2px 6px rgba(0,0,0,0.1)" }}>
             <h2 style={{ fontWeight: "bold" }}>🎲 추첨 방식</h2>
             <ul>
@@ -26,7 +28,9 @@ export default function DrawInfo() {
               <li>공정성과 투명성을 위해 생방송 및 공개검증 진행</li>
             </ul>
           </section>
+        </div>
 
+        <div>
           <section style={{ background: "#f9f9f9", padding: "20px", borderRadius: "12px", boxShadow: "0 2px 6px rgba(0,0,0,0.1)" }}>
             <h2 style={{ fontWeight: "bold" }}>📺 당첨 결과 확인 방법</h2>
             <ul>
@@ -35,16 +39,17 @@ export default function DrawInfo() {
             </ul>
           </section>
         </div>
-
-        <footer style={{ marginTop: "30px", padding: "10px", borderTop: "1px solid #ddd" }}>
-          <p>
-            👉 참고:{" "}
-            <a href="https://dhlottery.co.kr/gameInfo.do?method=lotMethod" target="_blank" rel="noopener noreferrer">
-              추첨안내 바로가기
-            </a>
-          </p>
-        </footer>
       </div>
+
+      <footer style={{ marginTop: "30px", padding: "10px", borderTop: "1px solid #ddd" }}>
+        <p>
+          👉 참고:{" "}
+          <a href="https://dhlottery.co.kr/gameInfo.do?method=lotMethod" target="_blank" rel="noopener noreferrer">
+            추첨안내 바로가기
+          </a>
+        </p>
+      </footer>
+
       <div style={{ marginTop: "20px", textAlign: "center" }}>
         <button
           style={{ padding: "10px 20px", borderRadius: "8px", background: "#7a0e0e", color: "#fff", border: "none", cursor: "pointer", marginRight: 10 }}
@@ -62,6 +67,6 @@ export default function DrawInfo() {
           ✓ 완료
         </button>
       </div>
-    </>
+    </div>
   );
 }

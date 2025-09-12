@@ -82,7 +82,7 @@ export default function RegisterPage() {
         privacy_agree: form.privacyAgree,
         marketing_agree: form.marketingAgree,
       });
-      alert("회원가입 성공. 로그인 페이지로 이동합니다.");
+      alert("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다 : )");
       nav("/login");
     } catch (err) {
       setError(getErrorMessage(err));
@@ -90,7 +90,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className={styles.twoColWrap}>
+    <div className={styles.twoColWrap} style={{ backgroundColor: "#fdecee" }}>
       <section className={styles.leftPane}>
         <form onSubmit={onSubmit} className={styles.card}>
           <h2 className={styles.title}>회원가입</h2>

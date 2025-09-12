@@ -102,8 +102,9 @@ export default function ComparePage() {
     }
 
     return (
-        <div style={{ padding: 20 }}>
-            <h1>회차별 분석 결과 비교</h1>
+        <div style={{ padding: 20, backgroundColor: "#fdecee", minHeight: "100vh" }}>
+            <h1 style={{ fontSize: "40px", fontWeight:800 }}>회차별 분석 결과 비교</h1>
+
             <div style={{ marginBottom: 20, display: "flex", gap: 12, justifyContent: "flex-end" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <span style={{ fontWeight: 500 }}>회차 A</span>
@@ -344,7 +345,7 @@ function CompareCard({ title, desc, leftTitle, rightTitle, renderLeft, renderRig
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,
@@ -414,7 +415,7 @@ function CompareMatchedNumbersCard({ title, numbersA, numbersB }) {
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,
@@ -474,7 +475,7 @@ function CompareOddEvenCard({ title, leftTitle, rightTitle, leftNumbers, rightNu
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,
@@ -558,7 +559,7 @@ function CompareSumCard({ title, drawALabel, drawAValue, drawBLabel, drawBValue 
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,
@@ -664,7 +665,7 @@ function CompareColorFrequencyCard({ title, drawA, drawB }) {
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,
@@ -825,7 +826,7 @@ function CompareConsecutiveCard({ title, desc, leftTitle, rightTitle, leftNumber
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,
@@ -912,7 +913,7 @@ function CompareBonusTopCard({ title, desc, drawA, drawB, list }) {
     return (
         <div
             style={{
-                background: "#f9f9f9",
+                background: "#fff5f6ff",
                 borderRadius: 10,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 padding: 22,

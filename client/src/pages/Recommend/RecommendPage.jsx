@@ -13,7 +13,7 @@ export default function RecommendPage() {
   if (!data) return <div>로딩중...</div>;
 
   return (
-    <div>
+    <div style={{ backgroundColor: "#fdecee", minHeight: "100vh", padding: 20 }}>
       <h1>AI 기반 추천</h1>
       <ul>
         {data.results.map(s => (
