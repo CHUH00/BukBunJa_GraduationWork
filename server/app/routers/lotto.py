@@ -4,9 +4,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import func
 from typing import Optional, List
 
-from ..database import get_db, LottoDraw, LottoRetailer
+from ..database import get_db, LottoDraw, LottoRetailer  # LottoRetailer 모델도 import 필요
 
 router = APIRouter(prefix="/lotto", tags=["lotto"])
+
+# ==============================
+# 기존 API (번호 관련)
+# ==============================
 
 @router.get("/latest-draw")
 def get_latest_draw(db: Session = Depends(get_db)):
@@ -45,8 +49,8 @@ def get_latest_draw(db: Session = Depends(get_db)):
 
 @router.get("/history")
 def history(
-        limit: Optional[int] = Query(None, ge=1, description="최근 n개"),
-        db: Session = Depends(get_db)
+    limit: Optional[int] = Query(None, ge=1, description="최근 n개"),
+    db: Session = Depends(get_db)
 ):
     try:
         query = db.query(LottoDraw).order_by(LottoDraw.draw_number.desc())
@@ -79,7 +83,6 @@ def history(
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"/history error: {e}")
 
-
 @router.get("/recommend")
 def recommend(n_sets: int = Query(3, ge=1, le=20)):
     """
@@ -93,6 +96,11 @@ def recommend(n_sets: int = Query(3, ge=1, le=20)):
         res.append({"set_id": i + 1, "numbers": [(x + i) % 45 or 45 for x in base]})
 
     return {"count": n_sets, "results": res}
+
+
+# ==============================
+# 신규 API (판매점 관련)
+# ==============================
 
 @router.get("/top-retailers")
 def top_retailers(limit: int = Query(20, ge=1, le=100), db: Session = Depends(get_db)):
@@ -130,9 +138,9 @@ def top_retailers(limit: int = Query(20, ge=1, le=100), db: Session = Depends(ge
 
 @router.get("/search-retailers")
 def search_retailers(
-        region: str,
-        limit: int = Query(20, ge=1, le=100),
-        db: Session = Depends(get_db)
+    region: str,
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db)
 ):
     """
     특정 지역(주소 포함 검색)에서 판매점 count 순위 조회
@@ -165,19 +173,18 @@ def search_retailers(
         ]
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"/search-retailers error: {e}")
-
-
+    
 @router.get("/draws")
 def get_draws(
-        limit: int = Query(2000, ge=1, description="최근 n개(오래된 순으로 정렬)"),
-        db: Session = Depends(get_db)
+    limit: int = Query(2000, ge=1, description="최근 n개(오래된 순으로 정렬)"),
+    db: Session = Depends(get_db)
 ):
     try:
         rows = (
             db.query(LottoDraw)
-            .order_by(LottoDraw.draw_number.asc())
-            .limit(limit)
-            .all()
+              .order_by(LottoDraw.draw_number.asc())  # 오래된 → 최신
+              .limit(limit)
+              .all()
         )
 
         out = []
@@ -194,6 +201,8 @@ def get_draws(
                 "회차": r.draw_number,
                 "추첨일": draw_date,
                 "년도": year,
+
+                # ✅ 번호/보너스
                 "당첨번호_1": r.num1,
                 "당첨번호_2": r.num2,
                 "당첨번호_3": r.num3,
@@ -201,6 +210,20 @@ def get_draws(
                 "당첨번호_5": r.num5,
                 "당첨번호_6": r.num6,
                 "보너스번호": r.bonus_number,
+
+                # ✅ 반드시 포함: 1등 승자/금액 (프런트 통계가 이 키를 읽음)
+                "당첨자수_1": r.first_prize_winners,
+                "당첨금액_1": int(r.first_prize_amount) if r.first_prize_amount is not None else None,
+
+                # (선택) 2~5등도 쓰려면 같이 내려줘도 됨
+                "당첨자수_2": r.second_prize_winners,
+                "당첨금액_2": int(r.second_prize_amount) if r.second_prize_amount is not None else None,
+                "당첨자수_3": r.third_prize_winners,
+                "당첨금액_3": int(r.third_prize_amount) if r.third_prize_amount is not None else None,
+                "당첨자수_4": r.fourth_prize_winners,
+                "당첨금액_4": int(r.fourth_prize_amount) if r.fourth_prize_amount is not None else None,
+                "당첨자수_5": r.fifth_prize_winners,
+                "당첨금액_5": int(r.fifth_prize_amount) if r.fifth_prize_amount is not None else None,
             })
         return out
     except SQLAlchemyError as e:
