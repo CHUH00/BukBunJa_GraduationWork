@@ -41,15 +41,7 @@ export default function Sidebar({ user, onLogout }) {
           { label: "회차별 분석 결과 비교", path: "/compare/compare" },
         ],
       },
-      {
-        label: "로또가이드",
-        children: [
-          { label: "로또 6/45 소개", path: "/guide/intro" },
-          { label: "구매하기", path: "/guide/purchase" },
-          { label: "구매 방법", path: "/guide/how-to-buy" },
-          { label: "추첨 안내", path: "/guide/draw-info" },
-        ],
-      },
+      { label: " 로또 가이드", path: "/guide/intro" }
     ]),
     []
   );

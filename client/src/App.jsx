@@ -17,9 +17,6 @@ import RetailersTopPage from "./pages/Retailers/TopPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LottoIntro from "./pages/Guide/LottoIntro";
-import Purchase from "./pages/Guide/Purchase";
-import HowToBuy from "./pages/Guide/HowToBuy";
-import DrawInfo from "./pages/Guide/DrawInfo";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HistoryPage from "./pages/MyPage/HistoryPage";
 import AccountPage from "./pages/MyPage/AccountPage";
@@ -89,9 +86,6 @@ export default function App() {
           <Route path="/lotto/recommend" element={<RecommendPage />} />
           <Route path="/retailers/top" element={<RetailersTopPage />} />
           <Route path="/guide/intro" element={<LottoIntro />} />
-          <Route path="/guide/purchase" element={<Purchase />} />
-          <Route path="/guide/how-to-buy" element={<HowToBuy />} />
-          <Route path="/guide/draw-info" element={<DrawInfo />} />
         </Route>
       </Routes>
     </BrowserRouter>
