@@ -8,7 +8,7 @@ function AgreementBox({ label, required, description, checked, onChange }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{ marginTop: 12, padding: 10 }}>
+    <div style={{ padding: "2px 10px" }}>
       <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
         <input type="checkbox" checked={checked} onChange={onChange} />
         <span style={{ fontWeight: 600 }}>

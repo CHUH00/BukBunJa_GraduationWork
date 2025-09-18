@@ -1,87 +1,191 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function Map({ retailers, selected }) {
-    const mapRef = useRef(null);
-    const clustererRef = useRef(null);
+export default function Map({
+  retailers,
+  selected,
+  searchRegion,
+  onClearSelected,
+  onSelect,
+}) {
+  const mapRef = useRef(null);
+  const clustererRef = useRef(null);
+  const geocoderRef = useRef(null);
 
-    useEffect(() => {
-        if (!window.kakao || !window.kakao.maps) {
-            const script = document.createElement("script");
-            script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
-                import.meta.env.VITE_KAKAO_API_KEY
-            }&autoload=false&libraries=clusterer,services`;
-            script.async = true;
-            script.onload = () => {
-                window.kakao.maps.load(initMap);
-            };
-            document.head.appendChild(script);
-        } else {
-            initMap();
-        }
-    }, []);
+  const [sdkLoaded, setSdkLoaded] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
-    // 지도 최초 초기화
-    const initMap = () => {
-        if (mapRef.current) return; // 이미 초기화 했으면 무시
+  const openInfoRef = useRef(null);
+  const markersRef = useRef([]);
+  const firstBoundsDoneRef = useRef(false);
+  const selectedRef = useRef(null);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
-        const container = document.getElementById("map");
-        const options = {
-            center: new window.kakao.maps.LatLng(37.5665, 126.9780), // 기본 서울
-            level: 7,
-        };
+  const relayoutAnd = (map, cb) => {
+    if (typeof map.relayout === "function") map.relayout();
+    setTimeout(cb, 0);
+  };
 
-        mapRef.current = new window.kakao.maps.Map(container, options);
-        clustererRef.current = new window.kakao.maps.MarkerClusterer({
-            map: mapRef.current,
-            averageCenter: true,
-            minLevel: 5,
+  useEffect(() => {
+    if (window.kakao && window.kakao.maps) {
+      setSdkLoaded(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
+      import.meta.env.VITE_KAKAO_API_KEY
+    }&autoload=false&libraries=clusterer,services`;
+    script.async = true;
+    script.onload = () => window.kakao.maps.load(() => setSdkLoaded(true));
+    document.head.appendChild(script);
+  }, []);
+
+  useEffect(() => {
+    if (!sdkLoaded || mapRef.current) return;
+
+    const container = document.getElementById("map");
+    const map = new window.kakao.maps.Map(container, {
+      center: new window.kakao.maps.LatLng(36.5, 127.8),
+      level: 13,
+    });
+    mapRef.current = map;
+
+    clustererRef.current = new window.kakao.maps.MarkerClusterer({
+      map,
+      averageCenter: true,
+      minLevel: 7,
+    });
+
+    geocoderRef.current = new window.kakao.maps.services.Geocoder();
+
+    if (onClearSelected) {
+      window.kakao.maps.event.addListener(map, "click", () => onClearSelected());
+    }
+
+    window.addEventListener("resize", () => relayoutAnd(map, () => {}));
+    setMapReady(true);
+  }, [sdkLoaded, onClearSelected]);
+
+  useEffect(() => {
+    if (!searchRegion) firstBoundsDoneRef.current = false;
+  }, [searchRegion]);
+
+  useEffect(() => {
+    if (!mapReady || !mapRef.current) return;
+
+    const map = mapRef.current;
+
+    if (openInfoRef.current) {
+      openInfoRef.current.close();
+      openInfoRef.current = null;
+    }
+
+    clustererRef.current.clear();
+    markersRef.current = [];
+
+    const markers = (retailers || []).map((s) => {
+      const lat = Number(s.위도);
+      const lng = Number(s.경도);
+      const pos = new window.kakao.maps.LatLng(lat, lng);
+      const marker = new window.kakao.maps.Marker({ position: pos });
+
+      window.kakao.maps.event.addListener(marker, "click", () => {
+        if (onSelect) onSelect(s);
+      });
+
+      markersRef.current.push({ lat, lng, marker, raw: s });
+      return marker;
+    });
+
+    clustererRef.current.addMarkers(markers);
+
+    if (selectedRef.current) return;
+
+    if (searchRegion && geocoderRef.current) {
+      const q = searchRegion.trim();
+      if (q) {
+        geocoderRef.current.addressSearch(q, (res, status) => {
+          if (selectedRef.current) return;
+
+          if (status === window.kakao.maps.services.Status.OK && res.length > 0) {
+            const { x, y, address_name } = res[0];
+            const center = new window.kakao.maps.LatLng(Number(y), Number(x));
+            const level =
+              /[동읍면리]($| )/.test(address_name) ? 6 :
+              /구/.test(address_name)               ? 7 : 8;
+
+            relayoutAnd(map, () => {
+              if (selectedRef.current) return;
+              map.setLevel(level);
+              map.setCenter(center);
+            });
+            return;
+          }
+
+          if (!searchRegion) firstBoundsDoneRef.current = false;
         });
-    };
+        return;
+      }
+    }
 
-    // retailers / selected가 바뀔 때 마커 업데이트
-    useEffect(() => {
-        if (!mapRef.current) return;
+    if (!searchRegion && !firstBoundsDoneRef.current && markers.length > 0) {
+      firstBoundsDoneRef.current = true;
+      const all = new window.kakao.maps.LatLngBounds();
+      markers.forEach((m) => all.extend(m.getPosition()));
+      relayoutAnd(map, () => map.setBounds(all));
+      return;
+    }
 
-        const map = mapRef.current;
+    relayoutAnd(map, () => {
+      map.setLevel(13);
+      map.setCenter(new window.kakao.maps.LatLng(36.5, 127.8));
+    });
+  }, [mapReady, retailers, searchRegion, onSelect]);
 
-        // 기존 클러스터러 마커 제거
-        clustererRef.current.clear();
+  useEffect(() => {
+    if (!mapReady || !mapRef.current) return;
+    const map = mapRef.current;
 
-        if (selected) {
-            // 선택된 판매점만 표시
-            const marker = new window.kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(selected.위도, selected.경도),
-                map,
-            });
+    if (openInfoRef.current) {
+      openInfoRef.current.close();
+      openInfoRef.current = null;
+    }
 
-            const info = new window.kakao.maps.InfoWindow({
-                content: `<div style="padding:6px;font-size:13px;">${selected.상호명}<br/>(${selected.count}회)</div>`,
-            });
+    if (!selected) return;
 
-            info.open(map, marker);
-            map.setCenter(new window.kakao.maps.LatLng(selected.위도, selected.경도));
-            map.setLevel(3);
-        } else {
-            // 전체 클러스터링
-            const markers = retailers.map((shop) => {
-                const marker = new window.kakao.maps.Marker({
-                    position: new window.kakao.maps.LatLng(shop.위도, shop.경도),
-                });
+    const lat = Number(selected.위도);
+    const lng = Number(selected.경도);
+    const pos = new window.kakao.maps.LatLng(lat, lng);
 
-                const info = new window.kakao.maps.InfoWindow({
-                    content: `<div style="padding:6px;font-size:13px;">${shop.상호명}<br/>(${shop.count}회)</div>`,
-                });
+    const marker = new window.kakao.maps.Marker({
+      position: pos,
+      map,
+      clickable: true,
+    });
 
-                window.kakao.maps.event.addListener(marker, "click", () => {
-                    info.open(map, marker);
-                });
+    if (onSelect) {
+      window.kakao.maps.event.addListener(marker, "click", () => {
+        onSelect(selected); 
+      });
+    }
 
-                return marker;
-            });
+    const info = new window.kakao.maps.InfoWindow({
+      content: `<div style="padding:6px;font-size:13px;">
+        ${selected.상호명}<br/>
+        ${selected.소재지}<br/>
+        (${selected.count}회)
+      </div>`,
+      removable: true,
+    });
+    info.open(map, marker);
+    openInfoRef.current = info;
 
-            clustererRef.current.addMarkers(markers);
-        }
-    }, [retailers, selected]);
+    relayoutAnd(map, () => {
+      map.setLevel(5);
+      map.setCenter(pos);
+    });
+  }, [selected, mapReady, onSelect]);
 
-    return <div id="map" style={{ width: "100%", height: "100%" }} />;
+  return <div id="map" style={{ width: "100%", height: "100%" }} />;
 }

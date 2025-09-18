@@ -102,3 +102,6 @@
   object-fit: contain;
 }
 
+button:focus, button:focus-visible {
+ outline: none;
+}

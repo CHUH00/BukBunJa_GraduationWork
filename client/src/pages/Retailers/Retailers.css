@@ -1,0 +1,147 @@
+.rt-wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+.rt-panel {
+  flex: 0 0 340px;
+  display: flex;
+  flex-direction: column;
+  background: #fdecee;
+  border-right: 1px solid #ddd;
+  padding: 10px 12px 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.rt-title {
+  font-size: 40px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: #2b2b2b;
+}
+
+.rt-search {
+  display: flex;
+  gap: 0;
+  margin-bottom: 8px;
+}
+
+.rt-search input,
+.rt-search button {
+  height: 32px;
+  line-height: 32px;
+  box-sizing: border-box;
+}
+
+.rt-search input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 12px;
+}
+
+.rt-search button {
+  min-width: 50px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-left: none;
+  background: #7a0e0e;   
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  font-size: 12px;
+}
+
+.rt-search button:hover {
+  background: #5c0a0a;   
+}
+
+.rt-list {
+  flex: 1;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 4px;
+}
+
+.rt-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rt-card--active {
+  background: #fbe4e8;  
+  border-color: #7a0e0e;
+}
+
+.rt-row1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.rt-name {
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-count {
+  font-size: 12px;
+  color: #7a0e0e;      
+  font-weight: 600;
+}
+
+.rt-addr {
+  font-size: 11.5px;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-paging {
+  position: sticky;
+  bottom: 0;
+  background: #fdecee;
+  padding-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.rt-paging button {
+  padding: 4px 8px;
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.rt-paging button:disabled {
+  background: #f3f3f3;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.rt-paging button:not(:disabled):hover {
+  background: #7a0e0e;  
+  color: #fff;
+  border-color: #7a0e0e;
+}
+
+.rt-map {
+  flex: 1;
+}

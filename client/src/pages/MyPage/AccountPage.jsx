@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../api/client";
-import styles from "./AccountPage.module.css";
+import styles from "./styles/AccountPage.module.css";
 import { getErrorMessage } from "../../utils/httpError";
 
 export default function AccountPage() {
