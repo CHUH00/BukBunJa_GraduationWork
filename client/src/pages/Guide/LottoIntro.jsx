@@ -2,14 +2,16 @@ import { useState } from "react";
 
 const containerStyle = {
     maxWidth: "1350px",
-    minHeight: "800px",
+    maxHeight: "800px",
     backgroundColor: "#fff",
-    margin: "20px auto 100px auto",
+    margin: "-835px 0 0 40px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    padding: 12,
-    borderRadius: 16
+    padding: 20,
+    borderRadius: 12,
+    flex: 1,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
 };
 
 const cardStyle = {
@@ -19,7 +21,7 @@ const cardStyle = {
     padding: 30,
     display: "flex",
     flexDirection: "column",
-    minHeight: 250,
+    minHeight: 290,
 };
 
 const titleStyle = {
@@ -37,7 +39,7 @@ const contentStyle = {
 
 const PAGE = {
     backgroundColor: "#fdecee",
-    width: "calc(100vw - 270px)", // 사이드바 제외한 너비
+    width: "100vw",
     height: "100vh",
     overflow: "hidden",
     padding: 20,
@@ -55,9 +57,9 @@ const INNER = {
 const HEADER = {
     fontSize: "40px",
     fontWeight: 800,
-    marginTop: 2,
+    marginTop: 0,
     marginBottom: 10,
-    marginLeft: 10
+    marginLeft: 40
   };
 
 
@@ -165,7 +167,7 @@ export default function LottoIntro() {
         <div style={PAGE}>
             <div style={INNER}>
                 <h1 style={HEADER}>로또 가이드</h1>
-                <p style={{ margin:"-10px 0px 0px 12px", color:"#7f1d1d", fontSize:13 }}>
+                <p style={{ margin:"-8px 0px 0px 40px", color:"#7f1d1d", fontSize:13 }}>
                   로또 6/45와 온라인 복권에 대한 기본적인 정보와 유용한 링크를 제공합니다.
                 </p>
             </div>
@@ -211,8 +213,8 @@ export default function LottoIntro() {
                 <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
                     <div style={{
                         ...cardStyle,
-                        maxHeight: 350,
-                        maxWidth: 1220,
+                        maxHeight: 400,
+                        maxWidth: 1235,
                         width: "100%",
                         margin: "0 auto"
                     }}>

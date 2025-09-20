@@ -48,11 +48,11 @@ function ballSkin(hex) {
   };
 }
 function ballColor(n) {
-  if (n >= 1 && n <= 10)  return "#F2C600";
-  if (n >= 11 && n <= 20) return "#2F7FD9";
-  if (n >= 21 && n <= 30) return "#D64545";
-  if (n >= 31 && n <= 40) return "#8B8F98";
-  return "#3AA76D";
+  if (n >= 1 && n <= 10)  return "#fbc400";
+  if (n >= 11 && n <= 20) return "#69c8f2";
+  if (n >= 21 && n <= 30) return "#ff7272";
+  if (n >= 31 && n <= 40) return "#aaaaaa";
+  return "#b0d840";
 }
 function sixNums(row) { return [1,2,3,4,5,6].map(i => Number(row[`당첨번호_${i}`])).filter(Boolean); }
 function latestRow(rows) {

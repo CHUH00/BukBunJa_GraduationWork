@@ -116,8 +116,8 @@ export default function ComparePage() {
                     padding: 20,
                     borderRadius: 12,
                     boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                    marginBottom: 10,
-                    minWidth: 630,
+                    margin: "0 110px 0 -125px",
+                    minWidth: 670,
                     mixWidth: 200,
                     display: "flex",
                     flexDirection: "column"
@@ -144,7 +144,7 @@ export default function ComparePage() {
     return (
         <div style={{
             backgroundColor: "#fdecee",
-            width: "calc(100vw - 270px)",
+            width: "calc(100vw)",
             height: "100vh",
             overflow: "hidden",
             padding: 20,
@@ -156,26 +156,25 @@ export default function ComparePage() {
                 style={{ 
                     fontSize: "40px", 
                     fontWeight: 800, 
-                    marginTop: -20, 
+                    marginTop: 0, 
                     marginBottom: 10, 
-                    marginLeft: -5,
-                    paddingTop: 24,
-                    paddingLeft: 12
+                    marginLeft: 40
                 }}
             >
                 회차별 분석 결과 비교
             </h1>
-            <p style={{ margin:"-8px 0px 10px 10px", color:"#7f1d1d", fontSize:13 }}>
+            <p style={{ margin:"-8px 0px 10px 40px", color:"#7f1d1d", fontSize:13 }}>
                 두 회차의 당첨 번호를 8가지 항목으로 비교 분석합니다.
             </p>
             <div style={{ 
                 marginBottom: 20, 
+                marginLeft: -280, 
                 display: "flex", 
                 gap: 12, 
                 justifyContent: "flex-end",
                 width: "100%"
             }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
                     <span style={{ fontWeight: 600 }}>회차 A : </span>
                     <input
                         type="number"
@@ -190,7 +189,7 @@ export default function ComparePage() {
                             fontSize: "15px",
                             background: "#fff",
                             borderRadius: 6,
-                            width: 80,
+                            width: 100,
                             textAlign: "center"
                         }}
                     />
@@ -210,7 +209,7 @@ export default function ComparePage() {
                             fontSize: "15px",
                             background: "#fff",
                             borderRadius: 6,
-                            width: 80,
+                            width: 100,
                             textAlign: "center"
                         }}
                     />
@@ -278,7 +277,7 @@ const cardStyle = {
     padding: 20,
     display: "flex",
     flexDirection: "column",
-    minHeight: 260,
+    minHeight: 300
 };
 
 // 비교 카드 컴포넌트
@@ -568,7 +567,7 @@ function CompareColorFrequencyCard({ title, drawA, drawB }) {
                 fontWeight: "bold",
                 fontSize: 17,
                 color: "#7a0e0e",
-                marginBottom: 8,
+                marginBottom: 7,
                 textAlign: "center"
             }}>
                 {title}
@@ -576,7 +575,7 @@ function CompareColorFrequencyCard({ title, drawA, drawB }) {
             <div style={{
                 fontSize: 13,
                 color: "#666",
-                marginBottom: 20,
+                marginBottom: 7,
                 textAlign: "center"
             }}>
                 각 회차의 색상별 당첨 번호 개수를 보여줍니다
@@ -1006,14 +1005,13 @@ function CompareSlider({ confirmedDrawA, confirmedDrawB, list }) {
             style={{
                 background: "#fff",
                 borderRadius: 18,
-                padding: 38,
-                marginTop: 20,
-                marginBottom: 38,
-                marginLeft: 20,
+                padding: 20,
+                marginTop: 25,
+                marginLeft: 44,
                 marginRight: 0,
-                maxWidth: 1305,
-                maxHeight: 450,
-                boxShadow: "0 4px 16px rgba(0,0,0,0.07)",
+                maxWidth: 1365,
+                maxHeight: 500,
+                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
                 alignItems: "flex-start",
                 display: "flex",
                 flexDirection: "column"
@@ -1025,8 +1023,7 @@ function CompareSlider({ confirmedDrawA, confirmedDrawB, list }) {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "100%",
-                    marginBottom: 10
+                    width: "100%"
                 }}
             >
                 <h2 style={{ fontSize: 30, fontWeight: 750, marginTop: 0, marginBottom: 20, textAlign: "center", width: "100%" }}>
@@ -1133,7 +1130,7 @@ function CompareSlider({ confirmedDrawA, confirmedDrawB, list }) {
                 </span>
             </div>
             {/* 인디케이터: 1개만 표시, highlight current index */}
-            <div style={{ textAlign: "center", width: "100%", marginTop: 8 }}>
+            <div style={{ textAlign: "center", width: "100%", marginTop: 20 }}>
                 {cards.map((_, i) => (
                     <span
                         key={i}
@@ -1142,7 +1139,7 @@ function CompareSlider({ confirmedDrawA, confirmedDrawB, list }) {
                             width: 8,
                             height: 8,
                             borderRadius: "50%",
-                            margin: "-3px 4px",
+                            margin: "5px 4px",
                             background: i === index ? "#7a0e0e" : "#ccc"
                         }}
                     />

@@ -1,10 +1,10 @@
 // 순수 유틸: 어디서든 import해서 rows만 넣으면 stats 뽑아줌
 const BALL_COLORS = [
-  { key: "1-10",  range: [1, 10],  name: "1~10 (Yellow)", color: "#D4A700" },
-  { key: "11-20", range: [11, 20], name: "11~20 (Blue)",  color: "#3566A8" },
-  { key: "21-30", range: [21, 30], name: "21~30 (Red)",   color: "#B84040" },
-  { key: "31-40", range: [31, 40], name: "31~40 (Gray)",  color: "#6E747D" },
-  { key: "41-45", range: [41, 45], name: "41~45 (Green)", color: "#2F8059" }
+  { key: "1-10",  range: [1, 10],  name: "1~10 (노랑)", color: "#fbc400" },
+  { key: "11-20", range: [11, 20], name: "11~20 (파랑)",  color: "#69c8f2" },
+  { key: "21-30", range: [21, 30], name: "21~30 (빨강)",   color: "#ff7272" },
+  { key: "31-40", range: [31, 40], name: "31~40 (회색)",  color: "#aaaaaa" },
+  { key: "41-45", range: [41, 45], name: "41~45 (초록)", color: "#b0d840" }
 ];
 const RANGE_BUCKETS = BALL_COLORS.map(({ key, range }) => ({ key, range }));
 

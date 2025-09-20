@@ -3,7 +3,7 @@ import { getHistory } from "../../utils/api";
 
 const PAGE = {
     backgroundColor: "#fdecee",
-    width: "calc(100vw - 270px)", // 사이드바 제외한 너비
+    width: "100vw",
     height: "100vh", 
     overflow: "hidden",
     padding: 20,
@@ -23,7 +23,7 @@ const HEADER = {
     fontWeight: 800,
     marginTop: 0,
     marginBottom: 10,
-    marginLeft: 15
+    marginLeft: 40
 };
 
 const ROWS = {
@@ -34,17 +34,17 @@ const ROWS = {
 
 const CARD = {
     background: "#fff",
-    padding: 12,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
     flex: 1,
-    maxHeight: "900px",
-    margin: "10px 0 0 20px",
+    maxHeight: "800px",
+    margin: "10px 0 0 40px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     overflowY: "auto",
-    width: "1350px"
+    width: "1370px"
 };
 
 export default function DrawsPage() {
@@ -90,7 +90,7 @@ export default function DrawsPage() {
         <div style={PAGE}>
             <div style={INNER}>
                 <h1 style={HEADER}>회차별 당첨번호 조회</h1>
-                <p style={{ margin:"-8px 0px 10px 17px", color:"#7f1d1d", fontSize:13 }}>
+                <p style={{ margin:"-8px 0px 10px 40px", color:"#7f1d1d", fontSize:13 }}>
                     특정 회차의 당첨 번호와 당첨자 수, 당첨금액 등의 상세 정보를 확인할 수 있습니다.
                 </p>
                 <div style={ROWS}>
@@ -255,7 +255,7 @@ export default function DrawsPage() {
                                         })}
                                     </tbody>
                                 </table>
-                                <div style={{ marginTop: 190 }}>
+                                <div style={{ marginTop: 150 }}>
                                     <small style={{ color: "#666" }}>
                                         ※ 당첨금 지급기한 : 지급개시일로부터 1년 (휴일인 경우 익일영업)
                                     </small>

@@ -12,7 +12,7 @@ import { ACCENT, BALL_COLOR_META } from "../../lib/lottoStats";
 const CARD = {
   wrap:{ background:"#fff", borderRadius:14, boxShadow:"0 2px 8px rgba(0,0,0,0.06)", padding:20, minHeight:320, display:"flex", flexDirection:"column" },
   title:{ fontSize:18, fontWeight:700, marginBottom:10 },
-  subtitle:{ fontSize:12, color:"#cc6f6f", marginBottom:10 }
+  subtitle:{ fontSize:12, color:"#cc6f6f", marginBottom:80 }
 };
 const GRID  = {
   page:{ background:"#fdecee", minHeight:"100vh", padding:"28px 20px" },
@@ -39,16 +39,16 @@ const TAB_META = [
 const COLOR_BY_KEY = Object.fromEntries(BALL_COLOR_META.map(m => [m.key, m.color]));
 const PAD_V = 20;
 const PAD_H = 30;
-const HEADER_H = 44;
-const PAGE  = { background:"#fdecee", height:"100vh", overflow:"hidden" };
+const HEADER_H = 30;
+const PAGE  = { background: "#fdecee", height: "100vh", overflow: "hidden", padding: `${PAD_V}px ${PAD_H}px`, boxSizing: "border-box" };
 const INNER = {
-  maxWidth:1500, margin:"0 auto",
+  maxWidth:1600, margin:"0 auto",
   height:`calc(100vh - ${PAD_V*2}px)`,
   display:"flex", flexDirection:"column",
   padding:`${PAD_V}px ${PAD_H}px`,
   boxSizing:"border-box"
 };
-const HEAD  = { marginBottom:18, flex:"0 0 auto", height:HEADER_H, display:"flex", flexDirection:"column", justifyContent:"center" };
+const HEAD  = { marginBottom:35, flex:"0 0 auto", height:HEADER_H, display:"flex", flexDirection:"column", justifyContent:"center" };
 const BODY  = { flex:"1 1 0", minHeight:0, overflow:"hidden" };
 
 const SimpleTooltip = ({ active, payload, label }) => active && payload?.length ? (
@@ -67,7 +67,7 @@ const SimpleTooltip = ({ active, payload, label }) => active && payload?.length 
 export function LottoCharts({ stats, active, setActive }) {
   const { freqData, bonusData, colorData, rangeData, oddEvenData, sumData, pairData, gapData, ymSeries, monthlyNumberSeries } = stats;
   const PIE_COLORS = colorData.map(d => d.color);
-  const ODD_EVEN_COLORS = ['#3D7B9C', '#9C3D41'];
+  const ODD_EVEN_COLORS = ['#69c8f2', '#ff7272'];
   const CHART_H = 420; // 단일 차트 화면에서의 높이 (스타일 변경 금지)
   const [selNum, setSelNum] = useState(1);
 
@@ -107,7 +107,7 @@ export function LottoCharts({ stats, active, setActive }) {
           ))}
         </div>
 
-        <div style={{ ...GRID.grid, gridTemplateColumns:"repeat(3, 1fr)", gridAutoRows:"150px" }}>
+        <div style={{ ...GRID.grid, gridTemplateColumns:"repeat(3, 1fr)", gridAutoRows:"232px" }}>
           {TAB_META.map((t) => (
             <div
               key={t.key}
@@ -153,7 +153,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 숫자 출현 빈도 */}
       {active === "freq" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>숫자 출현 빈도</div>
           <div style={CARD.subtitle}>역대 많이 나온 번호 막대그래프</div>
           <div style={{ flex:1 }}>
@@ -176,14 +176,14 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 색상별 출현 빈도 */}
       {active === "color" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>색상별 출현 빈도</div>
           <div style={CARD.subtitle}>공 색상 기준(1~10 노랑, 11~20 파랑, 21~30 빨강, 31~40 회색, 41~45 초록)</div>
           <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip />
-                <Legend verticalAlign="top" height={10} wrapperStyle={{ marginTop: 70 }} />
+                <Legend verticalAlign="top" height={10} wrapperStyle={{ marginTop: 10 }} />
                 <Pie
                   data={colorData}
                   dataKey="value"
@@ -204,7 +204,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 보너스 번호 출현 빈도 */}
       {active === "bonus" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>보너스 번호 출현 빈도</div>
           <div style={CARD.subtitle}>보너스만 별도 집계</div>
           <div style={{ flex:1 }}>
@@ -223,7 +223,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 연/월별 출현 추이 */}
       {active === "ym" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, flexWrap:"wrap" }}>
             <div>
               <div style={CARD.title}>월별 출현 추이</div>
@@ -291,7 +291,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 구간별 출현 빈도 */}
       {active === "range" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>번호 구간별 출현 빈도</div>
           <div style={CARD.subtitle}>1~10 / 11~20 / 21~30 / 31~40 / 41~45</div>
           <div style={{ flex:1 }}>
@@ -314,7 +314,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 홀짝 비율 */}
       {active === "oddEven" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>번호 홀짝 비율</div>
           <div style={CARD.subtitle}>전체 번호 기준</div>
 
@@ -366,7 +366,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 합 분포 */}
       {active === "sum" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>번호 합 분포</div>
           <div style={CARD.subtitle}>6개 합계의 히스토그램(폭 10)</div>
           <div style={{ flex:1 }}>
@@ -385,7 +385,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 자주 함께 등장한 번호쌍 */}
       {active === "pair" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>자주 함께 등장한 번호쌍</div>
           <div style={CARD.subtitle}>Top 20 조합</div>
           <div style={{ flex:1 }}>
@@ -404,7 +404,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 간 간격 분석 */}
       {active === "gap" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"100%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
           <div style={CARD.title}>번호 간 간격 분석</div>
           <div style={CARD.subtitle}>정렬 후 인접 번호 차이 분포</div>
           <div style={{ flex:1 }}>
@@ -446,7 +446,7 @@ export default function AnalysisPage({ fetchUrl = "/lotto/draws", rows }) {
           <h1 style={{ margin:0, fontSize: "40px", fontWeight:800 }}>
             번호 통계 분석
           </h1>
-          <p style={{ margin:"6px 0 0 0", color:"#7f1d1d", fontSize:13 }}>
+          <p style={{ margin:"3px 0 0 2px", color:"#7f1d1d", fontSize:13 }}>
             9가지 기준으로 로또 번호 데이터를 분석한 대시보드
           </p>
         </div>
