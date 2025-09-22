@@ -19,7 +19,6 @@ html, body{ overflow:hidden; }
 }
 .rec-inner{
   height:calc(100vh - var(--pad-v)*2);
-  max-width:1400px;
   margin:0 auto;
   display:grid;
   grid-template-columns: 520px 1fr;

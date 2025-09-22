@@ -18,9 +18,9 @@ const GRID  = {
   page:{ background:"#fdecee", minHeight:"100vh", padding:"28px 20px" },
   inner:{ maxWidth:1200, margin:"0 auto" },
   header:{ marginBottom:18 },
-  tabs:{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:18 },
+  tabs:{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:18, marginTop:10 },
   tag:{ padding:"8px 12px", borderRadius:10, background:"#fff", border:"1px solid #f3c6cb", fontSize:13, cursor:"pointer" },
-  grid:{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16 }
+  grid:{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16, height:"calc(100% - 70px)", overflowY:"auto" }
 };
 
 // ── “전체보기=카드 그리드”용 메타 ──
@@ -42,10 +42,9 @@ const PAD_H = 30;
 const HEADER_H = 30;
 const PAGE  = { background: "#fdecee", height: "100vh", overflow: "hidden", padding: `${PAD_V}px ${PAD_H}px`, boxSizing: "border-box" };
 const INNER = {
-  maxWidth:1600, margin:"0 auto",
+  margin:"0 auto",
   height:`calc(100vh - ${PAD_V*2}px)`,
   display:"flex", flexDirection:"column",
-  padding:`${PAD_V}px ${PAD_H}px`,
   boxSizing:"border-box"
 };
 const HEAD  = { marginBottom:35, flex:"0 0 auto", height:HEADER_H, display:"flex", flexDirection:"column", justifyContent:"center" };
@@ -107,33 +106,34 @@ export function LottoCharts({ stats, active, setActive }) {
           ))}
         </div>
 
-        <div style={{ ...GRID.grid, gridTemplateColumns:"repeat(3, 1fr)", gridAutoRows:"232px" }}>
-          {TAB_META.map((t) => (
-            <div
-              key={t.key}
-              onClick={() => setActive(t.key)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e)=> (e.key === "Enter" || e.key === " ") && setActive(t.key)}
-              style={{
-                ...CARD.wrap,
-                minHeight:0, height:"70%",
-                cursor:"pointer",
-                display:"grid",
-                gridTemplateColumns:"56px 1fr 24px",
-                alignItems:"center",
-                columnGap:12
-              }}
-            >
-              <div style={{ fontSize:28, textAlign:"center" }}>{t.icon}</div>
-              <div>
-                <div style={{ ...CARD.title, marginBottom:6 }}>{t.label}</div>
-                <div style={{ ...CARD.subtitle, marginBottom:0, color:"#9a3c40" }}>{t.sub}</div>
-              </div>
-              <div style={{ fontSize:20, color:"#d08a92", justifySelf:"end" }}>➜</div>
+        <div style={{ ...GRID.grid, gridTemplateColumns:"repeat(3, 1fr)"}}>
+        {TAB_META.map((t) => (
+          <div
+            key={t.key}
+            onClick={() => setActive(t.key)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e)=> (e.key === "Enter" || e.key === " ") && setActive(t.key)}
+            style={{
+              ...CARD.wrap,
+              minHeight: 0,
+              height: "100%",
+              cursor: "pointer",
+              display: "grid",
+              gridTemplateColumns: "72px 1fr 32px",
+              alignItems: "center",
+              columnGap: 16,
+            }}
+          >
+            <div style={{ fontSize: 36, textAlign: "center" }}>{t.icon}</div>
+            <div>
+              <div style={{ ...CARD.title, marginBottom: 8, fontSize: 18 }}>{t.label}</div>
+              <div style={{ ...CARD.subtitle, marginBottom: 0, color: "#9a3c40", fontSize: 14 }}>{t.sub}</div>
             </div>
-          ))}
-        </div>
+            <div style={{ fontSize: 28, color: "#d08a92", justifySelf: "end" }}>➜</div>
+          </div>
+        ))}
+      </div>
       </>
     );
   }
@@ -153,7 +153,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 숫자 출현 빈도 */}
       {active === "freq" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>숫자 출현 빈도</div>
           <div style={CARD.subtitle}>역대 많이 나온 번호 막대그래프</div>
           <div style={{ flex:1 }}>
@@ -161,7 +161,10 @@ export function LottoCharts({ stats, active, setActive }) {
               <BarChart data={freqData} margin={{ top: 50 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={25} />
-                <YAxis />
+                <YAxis 
+                  domain={[100, 200]}
+                  allowDecimals={false}
+                />
                 <Tooltip formatter={(v) => [`${v}회`, "출현 횟수"]} />
                 <Bar dataKey="value">
                   {freqData.map((d, idx) => (
@@ -176,7 +179,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 색상별 출현 빈도 */}
       {active === "color" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>색상별 출현 빈도</div>
           <div style={CARD.subtitle}>공 색상 기준(1~10 노랑, 11~20 파랑, 21~30 빨강, 31~40 회색, 41~45 초록)</div>
           <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -204,7 +207,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 보너스 번호 출현 빈도 */}
       {active === "bonus" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>보너스 번호 출현 빈도</div>
           <div style={CARD.subtitle}>보너스만 별도 집계</div>
           <div style={{ flex:1 }}>
@@ -212,7 +215,10 @@ export function LottoCharts({ stats, active, setActive }) {
               <BarChart data={bonusData} margin={{ top: 50 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} height={25} />
-                <YAxis />
+                <YAxis 
+                  domain={[10, 50]}
+                  allowDecimals={false}
+                />
                 <Tooltip content={<SimpleTooltip />} />
                 <Bar name="보너스 출현" dataKey="value" fill={ACCENT} />
               </BarChart>
@@ -223,7 +229,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 연/월별 출현 추이 */}
       {active === "ym" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, flexWrap:"wrap" }}>
             <div>
               <div style={CARD.title}>월별 출현 추이</div>
@@ -291,7 +297,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 구간별 출현 빈도 */}
       {active === "range" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>번호 구간별 출현 빈도</div>
           <div style={CARD.subtitle}>1~10 / 11~20 / 21~30 / 31~40 / 41~45</div>
           <div style={{ flex:1 }}>
@@ -314,7 +320,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 홀짝 비율 */}
       {active === "oddEven" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>번호 홀짝 비율</div>
           <div style={CARD.subtitle}>전체 번호 기준</div>
 
@@ -366,7 +372,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 합 분포 */}
       {active === "sum" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>번호 합 분포</div>
           <div style={CARD.subtitle}>6개 합계의 히스토그램(폭 10)</div>
           <div style={{ flex:1 }}>
@@ -385,7 +391,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 자주 함께 등장한 번호쌍 */}
       {active === "pair" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>자주 함께 등장한 번호쌍</div>
           <div style={CARD.subtitle}>Top 20 조합</div>
           <div style={{ flex:1 }}>
@@ -393,7 +399,7 @@ export function LottoCharts({ stats, active, setActive }) {
               <BarChart data={pairData} margin={{ top: 50 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="pair" tick={{ fontSize: 10 }} interval={0} angle={-45} textAnchor="end" height={60} />
-                <YAxis />
+                <YAxis domain={[20, 40]} />
                 <Tooltip content={<SimpleTooltip />} />
                 <Bar name="동시 출현" dataKey="value" fill={ACCENT} />
               </BarChart>
@@ -404,7 +410,7 @@ export function LottoCharts({ stats, active, setActive }) {
 
       {/* 번호 간 간격 분석 */}
       {active === "gap" && (
-        <div style={{ ...CARD.wrap, minHeight:0, height:"85%" }}>
+        <div style={{ ...CARD.wrap, minHeight:0, height:"90%" }}>
           <div style={CARD.title}>번호 간 간격 분석</div>
           <div style={CARD.subtitle}>정렬 후 인접 번호 차이 분포</div>
           <div style={{ flex:1 }}>
@@ -443,10 +449,10 @@ export default function AnalysisPage({ fetchUrl = "/lotto/draws", rows }) {
       <div style={INNER}>
         <div style={HEAD}>
           
-          <h1 style={{ margin:0, fontSize: "40px", fontWeight:800 }}>
+          <h1 style={{ display:"block", margin:"30px 0 0 0", fontSize: "40px", fontWeight:800 }}>
             번호 통계 분석
           </h1>
-          <p style={{ margin:"3px 0 0 2px", color:"#7f1d1d", fontSize:13 }}>
+          <p style={{ margin:"3px 0 0 0px", color:"#7f1d1d", fontSize:13 }}>
             9가지 기준으로 로또 번호 데이터를 분석한 대시보드
           </p>
         </div>

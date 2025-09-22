@@ -113,11 +113,11 @@ export default function ComparePage() {
             <div
                 style={{
                     background: "#fff",
-                    padding: 20,
+                    padding: 10,
                     borderRadius: 12,
                     boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                    margin: "0 110px 0 -125px",
-                    minWidth: 670,
+                    margin: 0,
+                    width: "100%",
                     mixWidth: 200,
                     display: "flex",
                     flexDirection: "column"
@@ -144,7 +144,7 @@ export default function ComparePage() {
     return (
         <div style={{
             backgroundColor: "#fdecee",
-            width: "calc(100vw)",
+            width: "100%",
             height: "100vh",
             overflow: "hidden",
             padding: 20,
@@ -157,18 +157,18 @@ export default function ComparePage() {
                     fontSize: "40px", 
                     fontWeight: 800, 
                     marginTop: 0, 
-                    marginBottom: 10, 
-                    marginLeft: 40
+                    marginBottom: 0
+                    
                 }}
             >
                 회차별 분석 결과 비교
             </h1>
-            <p style={{ margin:"-8px 0px 10px 40px", color:"#7f1d1d", fontSize:13 }}>
+            <p style={{ margin:"3px 0px 0px 0px", color:"#7f1d1d", fontSize:13 }}>
                 두 회차의 당첨 번호를 8가지 항목으로 비교 분석합니다.
             </p>
             <div style={{ 
                 marginBottom: 20, 
-                marginLeft: -280, 
+                marginLeft: 0, 
                 display: "flex", 
                 gap: 12, 
                 justifyContent: "flex-end",
@@ -244,7 +244,7 @@ export default function ComparePage() {
             <div
                 style={{
                     display: "flex",
-                    gap: 40,
+                    gap: 20,
                     flexWrap: "nowrap",
                     justifyContent: "center",
                     width: "100%"
@@ -273,11 +273,10 @@ export default function ComparePage() {
 const cardStyle = {
     backgroundColor: "#fdecee",
     borderRadius: 16,
-    boxShadow: "0 2px 8px rgba(0,0,0,0.09)",
     padding: 20,
     display: "flex",
     flexDirection: "column",
-    minHeight: 300
+    minHeight: 280
 };
 
 // 비교 카드 컴포넌트
@@ -851,300 +850,271 @@ function CompareBonusTopCard({ title, desc, drawA, drawB, list }) {
 import React from "react";
 
 function CompareSlider({ confirmedDrawA, confirmedDrawB, list }) {
-    const [index, setIndex] = useState(0); // index of the first visible card
-    const cards = [
-        <CompareMatchedNumbersCard
-            title="일치한 번호"
-            numbersA={confirmedDrawA.numbers}
-            numbersB={confirmedDrawB.numbers}
-            key="matched"
-        />,
-        <CompareConsecutiveCard
-            title="연속 번호 비교"
-            desc="각 회차에서 등장한 연속된 번호 구간을 비교합니다"
-            leftTitle={`${confirmedDrawA.draw_number}회차`}
-            rightTitle={`${confirmedDrawB.draw_number}회차`}
-            leftNumbers={confirmedDrawA.numbers}
-            rightNumbers={confirmedDrawB.numbers}
-            key="consecutive"
-        />,
-        <CompareOddEvenCard
-            title="홀짝 구성 비교"
-            leftTitle={`${confirmedDrawA.draw_number}회차`}
-            rightTitle={`${confirmedDrawB.draw_number}회차`}
-            leftNumbers={confirmedDrawA.numbers}
-            rightNumbers={confirmedDrawB.numbers}
-            key="oddeven"
-        />,
-        <CompareSumCard
-            title="번호 합 비교"
-            drawALabel={`${confirmedDrawA.draw_number}회차`}
-            drawAValue={confirmedDrawA.numbers.reduce((a, b) => a + b, 0)}
-            drawBLabel={`${confirmedDrawB.draw_number}회차`}
-            drawBValue={confirmedDrawB.numbers.reduce((a, b) => a + b, 0)}
-            key="sum"
-        />,
-        <CompareColorFrequencyCard
-            title="색상별 출현 빈도"
-            drawA={confirmedDrawA}
-            drawB={confirmedDrawB}
-            key="color"
-        />,
-        <CompareCard
-            title="자주 등장한 번호"
-            desc="자주 등장하는 상위 10개 번호의 포함을 표시합니다"
-            leftTitle={`${confirmedDrawA.draw_number}회차`}
-            rightTitle={`${confirmedDrawB.draw_number}회차`}
-            renderLeft={() => {
-                const freq = {};
-                list.forEach(r => {
-                    r.numbers.forEach(n => {
-                        freq[n] = (freq[n] || 0) + 1;
-                    });
-                });
-                const top10 = Object.entries(freq)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 10)
-                    .map(([k]) => Number(k));
-                const a = confirmedDrawA.numbers.filter(n => top10.includes(n));
-                return a.length
-                    ? a.sort((x, y) => x - y).map((n, i) => (
-                        <LottoBall key={i} number={n} />
-                    ))
-                    : <span style={{ fontWeight: 600}}>없음</span>;
-            }}
-            renderRight={() => {
-                const freq = {};
-                list.forEach(r => {
-                    r.numbers.forEach(n => {
-                        freq[n] = (freq[n] || 0) + 1;
-                    });
-                });
-                const top10 = Object.entries(freq)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 10)
-                    .map(([k]) => Number(k));
-                const b = confirmedDrawB.numbers.filter(n => top10.includes(n));
-                return b.length
-                    ? b.sort((x, y) => x - y).map((n, i) => (
-                        <LottoBall key={i} number={n} />
-                    ))
-                    : <span style={{ fontWeight: 600}}>없음</span>;
-            }}
-            key="freq"
-        />,
-        <CompareCard
-            title="자주 등장하지 않은 번호"
-            desc="자주 등장하지 않는 하위 10개 번호의 포함을 표시합니다"
-            leftTitle={`${confirmedDrawA.draw_number}회차`}
-            rightTitle={`${confirmedDrawB.draw_number}회차`}
-            renderLeft={() => {
-                const freq = {};
-                list.forEach(r => {
-                    r.numbers.forEach(n => {
-                        freq[n] = (freq[n] || 0) + 1;
-                    });
-                });
-                for (let i = 1; i <= 45; i++) if (!freq[i]) freq[i] = 0;
-                const bottom10 = Object.entries(freq)
-                    .sort((a, b) => a[1] - b[1] || a[0] - b[0])
-                    .slice(0, 10)
-                    .map(([k]) => Number(k));
-                const a = confirmedDrawA.numbers.filter(n => bottom10.includes(n));
-                return a.length
-                    ? a.sort((x, y) => x - y).map((n, i) => (
-                        <LottoBall key={i} number={n} />
-                    ))
-                    : <span style={{ fontWeight: 600}}>없음</span>;
-            }}
-            renderRight={() => {
-                const freq = {};
-                list.forEach(r => {
-                    r.numbers.forEach(n => {
-                        freq[n] = (freq[n] || 0) + 1;
-                    });
-                });
-                for (let i = 1; i <= 45; i++) if (!freq[i]) freq[i] = 0;
-                const bottom10 = Object.entries(freq)
-                    .sort((a, b) => a[1] - b[1] || a[0] - b[0])
-                    .slice(0, 10)
-                    .map(([k]) => Number(k));
-                const b = confirmedDrawB.numbers.filter(n => bottom10.includes(n));
-                return b.length
-                    ? b.sort((x, y) => x - y).map((n, i) => (
-                        <LottoBall key={i} number={n} />
-                    ))
-                    : <span style={{ fontWeight: 600}}>없음</span>;
-            }}
-            key="rare"
-        />,
-        <CompareBonusTopCard
-            title="자주 등장한 보너스 번호 포함"
-            desc="각 회차의 보너스 번호가 상위 10개 보너스 번호에 포함되는지 표시합니다"
-            drawA={confirmedDrawA}
-            drawB={confirmedDrawB}
-            list={list}
-            key="bonus"
-        />
-    ];
+  const cards = [
+    <CompareMatchedNumbersCard
+      title="일치한 번호"
+      numbersA={confirmedDrawA.numbers}
+      numbersB={confirmedDrawB.numbers}
+      key="matched"
+    />,
+    <CompareConsecutiveCard
+      title="연속 번호 비교"
+      desc="각 회차에서 등장한 연속된 번호 구간을 비교합니다"
+      leftTitle={`${confirmedDrawA.draw_number}회차`}
+      rightTitle={`${confirmedDrawB.draw_number}회차`}
+      leftNumbers={confirmedDrawA.numbers}
+      rightNumbers={confirmedDrawB.numbers}
+      key="consecutive"
+    />,
+    <CompareOddEvenCard
+      title="홀짝 구성 비교"
+      leftTitle={`${confirmedDrawA.draw_number}회차`}
+      rightTitle={`${confirmedDrawB.draw_number}회차`}
+      leftNumbers={confirmedDrawA.numbers}
+      rightNumbers={confirmedDrawB.numbers}
+      key="oddeven"
+    />,
+    <CompareSumCard
+      title="번호 합 비교"
+      drawALabel={`${confirmedDrawA.draw_number}회차`}
+      drawAValue={confirmedDrawA.numbers.reduce((a, b) => a + b, 0)}
+      drawBLabel={`${confirmedDrawB.draw_number}회차`}
+      drawBValue={confirmedDrawB.numbers.reduce((a, b) => a + b, 0)}
+      key="sum"
+    />,
+    <CompareColorFrequencyCard
+      title="색상별 출현 빈도"
+      drawA={confirmedDrawA}
+      drawB={confirmedDrawB}
+      key="color"
+    />,
+    <CompareCard
+      title="자주 등장한 번호"
+      desc="자주 등장하는 상위 10개 번호의 포함을 표시합니다"
+      leftTitle={`${confirmedDrawA.draw_number}회차`}
+      rightTitle={`${confirmedDrawB.draw_number}회차`}
+      renderLeft={() => {
+        const freq = {};
+        list.forEach(r => {
+          r.numbers.forEach(n => { freq[n] = (freq[n] || 0) + 1; });
+        });
+        const top10 = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k])=>Number(k));
+        const a = confirmedDrawA.numbers.filter(n => top10.includes(n));
+        return a.length ? a.sort((x,y)=>x-y).map((n,i)=><LottoBall key={i} number={n} />) : <span style={{fontWeight:600}}>없음</span>;
+      }}
+      renderRight={() => {
+        const freq = {};
+        list.forEach(r => {
+          r.numbers.forEach(n => { freq[n] = (freq[n] || 0) + 1; });
+        });
+        const top10 = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k])=>Number(k));
+        const b = confirmedDrawB.numbers.filter(n => top10.includes(n));
+        return b.length ? b.sort((x,y)=>x-y).map((n,i)=><LottoBall key={i} number={n} />) : <span style={{fontWeight:600}}>없음</span>;
+      }}
+      key="freq"
+    />,
+    <CompareCard
+      title="자주 등장하지 않은 번호"
+      desc="자주 등장하지 않는 하위 10개 번호의 포함을 표시합니다"
+      leftTitle={`${confirmedDrawA.draw_number}회차`}
+      rightTitle={`${confirmedDrawB.draw_number}회차`}
+      renderLeft={() => {
+        const freq = {};
+        list.forEach(r => {
+          r.numbers.forEach(n => { freq[n] = (freq[n] || 0) + 1; });
+        });
+        for (let i=1;i<=45;i++) if (!freq[i]) freq[i]=0;
+        const bottom10 = Object.entries(freq).sort((a,b)=>a[1]-b[1] || a[0]-b[0]).slice(0,10).map(([k])=>Number(k));
+        const a = confirmedDrawA.numbers.filter(n => bottom10.includes(n));
+        return a.length ? a.sort((x,y)=>x-y).map((n,i)=><LottoBall key={i} number={n} />) : <span style={{fontWeight:600}}>없음</span>;
+      }}
+      renderRight={() => {
+        const freq = {};
+        list.forEach(r => {
+          r.numbers.forEach(n => { freq[n] = (freq[n] || 0) + 1; });
+        });
+        for (let i=1;i<=45;i++) if (!freq[i]) freq[i]=0;
+        const bottom10 = Object.entries(freq).sort((a,b)=>a[1]-b[1] || a[0]-b[0]).slice(0,10).map(([k])=>Number(k));
+        const b = confirmedDrawB.numbers.filter(n => bottom10.includes(n));
+        return b.length ? b.sort((x,y)=>x-y).map((n,i)=><LottoBall key={i} number={n} />) : <span style={{fontWeight:600}}>없음</span>;
+      }}
+      key="rare"
+    />,
+    <CompareBonusTopCard
+      title="자주 등장한 보너스 번호 포함"
+      desc="각 회차의 보너스 번호가 상위 10개 보너스 번호에 포함되는지 표시합니다"
+      drawA={confirmedDrawA}
+      drawB={confirmedDrawB}
+      list={list}
+      key="bonus"
+    />
+  ];
 
-    const CARD_COUNT = 4;
-    const total = cards.length;
-    // Looping index helpers
-    const getWrappedIndex = (i) => (i + total) % total;
+  const CARD_COUNT = 4;
 
-    const visibleCards = Array.from({ length: CARD_COUNT }).map((_, idx) => {
-        const cardIdx = getWrappedIndex(index + idx);
-        return cards[cardIdx];
-    });
-    const handlePrev = () => setIndex(i => getWrappedIndex(i - 1));
-    const handleNext = () => setIndex(i => getWrappedIndex(i + 1));
+  // [변경] 페이지 묶기
+  const pages = React.useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < cards.length; i += CARD_COUNT) {
+      arr.push(cards.slice(i, i + CARD_COUNT));
+    }
+    return arr;
+  }, [cards]);
 
-    return (
-        <div
-            style={{
-                background: "#fff",
-                borderRadius: 18,
-                padding: 20,
-                marginTop: 25,
-                marginLeft: 44,
-                marginRight: 0,
-                maxWidth: 1365,
-                maxHeight: 500,
-                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                alignItems: "flex-start",
-                display: "flex",
-                flexDirection: "column"
-            }}
+  const pageCount = pages.length;
+
+  // [추가] 앞뒤 클론 확장
+  const extendedPages = React.useMemo(() => {
+    if (!pageCount) return [];
+    return [pages[pageCount - 1], ...pages, pages[0]];
+  }, [pages, pageCount]);
+
+  // [변경] 시작 인덱스 1 (앞쪽 클론 때문)
+  const [page, setPage] = useState(1);
+  const trackRef = React.useRef(null);
+
+  const handlePrev = () => setPage(p => p - 1); // [변경] 바로 -1
+  const handleNext = () => setPage(p => p + 1); // [변경] 바로 +1
+
+  // [추가] 트랜지션 종료 시 클론에서 실제 페이지로 점프
+  const handleTransitionEnd = () => {
+    const el = trackRef.current;
+    if (!el || !pageCount) return;
+
+    if (page === 0) {
+      // 맨 앞 클론 → 마지막 실제 페이지로 점프
+      el.style.transition = "none";
+      setPage(pageCount);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.transition = "transform 0.8s cubic-bezier(.4,.8,.3,1)";
+        });
+      });
+    } else if (page === pageCount + 1) {
+      // 맨 뒤 클론 → 첫 실제 페이지로 점프
+      el.style.transition = "none";
+      setPage(1);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.transition = "transform 0.8s cubic-bezier(.4,.8,.3,1)";
+        });
+      });
+    }
+  };
+
+  // 현재 실제 페이지(인디케이터용)
+  const realPage = ((page - 1 + pageCount) % pageCount);
+
+  return (
+    <div
+      style={{
+        background: "#fff",
+        borderRadius: 18,
+        padding: 20,
+        marginTop: 25,
+        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      <div style={{ textAlign: "center", width: "100%" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 750, margin: 0 }}>
+          8가지 비교 분석 결과 <br />
+          <span style={{ fontSize: 18, color: "#7a0e0e", fontWeight: "bold" }}>
+            {confirmedDrawA.draw_number}회차 vs {confirmedDrawB.draw_number}회차
+          </span>
+        </h2>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", width: "100%", marginTop: 20 }}>
+        {/* 왼쪽 화살표 */}
+        <span
+          onClick={handlePrev}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 30,
+            height: 30,
+            cursor: "pointer",
+            color: "#7a0e0e",
+            fontSize: 30,
+            marginRight: 10
+          }}
         >
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%"
-                }}
-            >
-                <h2 style={{ fontSize: 30, fontWeight: 750, marginTop: 0, marginBottom: 20, textAlign: "center", width: "100%" }}>
-                    8가지 비교 분석 결과 <br />
-                    <span style={{ fontSize: 18, color: "#7a0e0e", fontWeight: "bold" }}>
-                        {confirmedDrawA.draw_number}회차 vs {confirmedDrawB.draw_number}회차
-                    </span>
-                </h2>
-            </div>
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                width: "100%",
-                marginBottom: 10
-            }}>
-                {/* Left Arrow Icon */}
-                <span
-                    onClick={handlePrev}
-                    style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 30,
-                        height: 30,
-                        minWidth: 0,
-                        minHeight: 0,
-                        cursor: "pointer",
-                        color: "#7a0e0e",
-                        fontSize: 30,
-                        marginRight: 10,
-                        userSelect: "none"
-                    }}
-                    aria-label="이전"
-                    tabIndex={0}
-                    role="button"
-                >
-                    {/* Arrow icon with color only */}
-                    <svg width="20" height="20" viewBox="0 0 20 20" style={{display: "block"}} fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polyline points="13,4 7,10 13,16" stroke="#7a0e0e" strokeWidth="2.3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </span>
-                <div style={{
-                    flex: 1,
-                    overflow: "hidden",
-                    position: "relative"
-                }}>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <polyline points="13,4 7,10 13,16" stroke="#7a0e0e" strokeWidth="2.3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </span>
+
+        {/* 트랙 */}
+        <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+          <div
+            ref={trackRef}
+            onTransitionEnd={handleTransitionEnd} 
+            style={{
+              display: "flex",
+              transition: "transform 0.8s cubic-bezier(.4,.8,.3,1)",
+              transform: `translateX(-${page * 100}%)`
+            }}
+          >
+            {extendedPages.map((pg, pIdx) => (
+              <div key={pIdx} style={{ flex: "0 0 100%", display: "flex", gap: 32 }}>
+                {pg.map((card, cIdx) => (
                     <div
-                        style={{
-                            display: "flex",
-                            gap: 32,
-                            transition: "transform 0.4s cubic-bezier(.4,.8,.3,1)"
-                        }}
-                    >
-                        {visibleCards.map((card, idx) => (
-                            <div
-                                key={idx}
-                                style={{
-                                    flex: `0 0 ${100 / CARD_COUNT}%`,
-                                    minWidth: 0,
-                                    maxWidth: "100%",
-                                    boxSizing: "border-box"
-                                }}
-                            >
-                                {card}
-                            </div>
-                        ))}
-                    </div>
-                    {/* 우측 그라디언트 */}
-                    <div style={{
-                        position: "absolute",
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: "15%",
-                        pointerEvents: "none",
-                        background: "linear-gradient(to left, white 0%, transparent 100%)"
-                    }} />
-                </div>
-                {/* Right Arrow Icon */}
-                <span
-                    onClick={handleNext}
+                    key={cIdx}
                     style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 30,
-                        height: 30,
-                        minWidth: 0,
-                        minHeight: 0,
-                        cursor: "pointer",
-                        color: "#7a0e0e",
-                        fontSize: 30,
-                        marginLeft: 10,
-                        userSelect: "none"
+                        flex: `0 0 calc((100% - (32px * 3)) / 4)`,
+                        boxSizing: "border-box"
                     }}
-                    aria-label="다음"
-                    tabIndex={0}
-                    role="button"
-                >
-                    {/* Arrow icon with color only */}
-                    <svg width="20" height="20" viewBox="0 0 20 20" style={{display: "block"}} fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polyline points="7,4 13,10 7,16" stroke="#7a0e0e" strokeWidth="2.3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </span>
-            </div>
-            {/* 인디케이터: 1개만 표시, highlight current index */}
-            <div style={{ textAlign: "center", width: "100%", marginTop: 20 }}>
-                {cards.map((_, i) => (
-                    <span
-                        key={i}
-                        style={{
-                            display: "inline-block",
-                            width: 8,
-                            height: 8,
-                            borderRadius: "50%",
-                            margin: "5px 4px",
-                            background: i === index ? "#7a0e0e" : "#ccc"
-                        }}
-                    />
+                    >
+                    {card}
+                    </div>
                 ))}
-            </div>
+                </div>
+            ))}
+          </div>
         </div>
-    );
+
+        {/* 오른쪽 화살표 */}
+        <span
+          onClick={handleNext}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 30,
+            height: 30,
+            cursor: "pointer",
+            color: "#7a0e0e",
+            fontSize: 30,
+            marginLeft: 10
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <polyline points="7,4 13,10 7,16" stroke="#7a0e0e" strokeWidth="2.3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </span>
+      </div>
+
+      {/* 인디케이터 */}
+      <div style={{ textAlign: "center", marginTop: 15 }}>
+        {Array.from({ length: pageCount }).map((_, p) => (
+          <span
+            key={p}
+            onClick={() => setPage(p + 1)}
+            style={{
+              display: "inline-block",
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              margin: "0 4px",
+              background: p === realPage ? "#7a0e0e" : "#ccc",
+              cursor: "pointer"
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }

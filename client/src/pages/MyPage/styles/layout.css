@@ -2,7 +2,7 @@
 
 .hp-wrap{ background:var(--bg); min-height:100vh; }
 .hp-container{
-  max-width:1400px; margin:0 auto; padding:20px 0px; box-sizing:border-box;
+  margin:0 auto; padding:20px 30px; box-sizing:border-box;
 }
 .hp-page-title{ margin:0 0 20px; font-size:40px; font-weight:800; color:#213547; line-height:1.2; }
 

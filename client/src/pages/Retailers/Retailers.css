@@ -4,12 +4,12 @@
 }
 
 .rt-panel {
-  flex: 0 0 340px;
+  flex: 0 0 400px;
   display: flex;
   flex-direction: column;
   background: #fdecee;
   border-right: 1px solid #ddd;
-  padding: 10px 12px 12px;
+  padding: 20px 30px;
   box-sizing: border-box;
   overflow: hidden;
 }

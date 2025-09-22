@@ -13,7 +13,7 @@ const PAD_H = 30;
 const HEADER_H = 44;
 
 const PAGE = { background: "#fdecee", height: "100vh", overflow: "hidden", padding: `${PAD_V}px ${PAD_H}px`, boxSizing: "border-box" };
-const INNER = { maxWidth: 1400, margin: "0 auto", height: `calc(100vh - ${PAD_V * 2}px)`, display: "flex", flexDirection: "column", overflow: "hidden" };
+const INNER = { margin: "0 auto", height: `calc(100vh - ${PAD_V * 2}px)`, display: "flex", flexDirection: "column", overflow: "hidden" };
 const HEADER = { height: HEADER_H, display: "flex", alignItems: "center", marginBottom: GAP };
 const ROWS = { height: `calc(100% - ${HEADER_H + GAP}px)`, display: "grid", gridTemplateRows: "repeat(3, minmax(0, 1fr))", gap: GAP, overflow: "hidden" };
 const GRID3 = { display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: GAP, minHeight: 0 };
@@ -22,11 +22,11 @@ const TITLE = { fontSize: 15, fontWeight: 800, margin: 0, marginBottom: 6, color
 const SUB   = { fontSize: 11, color: "#a04d51", margin: "0 0 8px" };
 
 const RESULT = {
-  wrap: { display: "flex", flexDirection: "column", gap: 10 },
-  title: { fontSize: 22, fontWeight: 900, color: "#2b0d0e", letterSpacing: -0.3, margin: 8 },
+  wrap: { display: "flex", flexDirection: "column", gap: 0 },
+  title: { fontSize: 22, fontWeight: 900, color: "#2b0d0e", letterSpacing: -0.3, margin: 0 },
   date:  { fontSize: 14, color: "#a1696d", marginTop: 2 },
   bar: {
-    background: "#7e2e32", color: "#fff", borderRadius: 16, padding: "25px 25px",
+    background: "#7e2e32", color: "#fff", borderRadius: 16, padding: "15px 25px",
     display: "flex", gap: 20, alignItems: "center", justifyContent: "center", width: "100%", boxSizing: "border-box"
   },
   plus: { fontSize: 24, fontWeight: 900, margin: "0 6px" }
@@ -40,8 +40,8 @@ const fmtMonth = (s) => {
 
 function ballSkin(hex) {
   return {
-    width: 100, height: 60, borderRadius: "50%", display: "inline-flex",
-    alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 18, letterSpacing: -0.5,
+    width: 100, height: 70, borderRadius: "100%", display: "inline-flex",
+    alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 26, letterSpacing: -0.5,
     background: `radial-gradient(65% 65% at 30% 30%, #ffffff66, transparent 70%), linear-gradient(180deg, ${hex} 5%, ${hex}CC 100%)`,
     boxShadow: "inset 0 -6px 10px rgba(0,0,0,0.18), inset 0 2px 4px rgba(255,255,255,0.35), 0 6px 12px rgba(0,0,0,0.12)",
     border: "1px solid rgba(0,0,0,0.05)"
@@ -152,7 +152,7 @@ export default function MainPage() {
             </div>
 
             <div style={CARD}>
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
                 <div style={{ fontSize: 15, fontWeight: 800, color: "#24304a" }}>최근 1등 당첨자 수 통계</div>
                 <div style={{ fontSize: 24, fontWeight: 900, color: "#24304a" }}>
                   {recentFirstWinners.total}<span style={{ fontSize: 13, color: "#8b93a6", marginLeft: 4 }}>명</span>
@@ -160,7 +160,7 @@ export default function MainPage() {
               </div>
               <div style={{ flex: 1, minHeight: 0 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={recentFirstWinners.data} margin={{ top: 6, right: 8, left: 0, bottom: 4 }}>
+                  <BarChart data={recentFirstWinners.data} margin={{ top: 6, right: 8, left: -30, bottom: 0 }}>
                     <defs>
                       <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor={ACCENT} stopOpacity={1} />
@@ -211,7 +211,7 @@ export default function MainPage() {
                       <BarChart data={top5}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
-                        <YAxis />
+                        <YAxis domain={[100, 200]} />
                         <Tooltip />
                         <Bar dataKey="value" name="출현" fill={ACCENT} radius={[6,6,0,0]} />
                       </BarChart>
@@ -225,7 +225,7 @@ export default function MainPage() {
                       <BarChart data={bottom5}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
-                        <YAxis />
+                        <YAxis domain={[100, 200]} />
                         <Tooltip />
                         <Bar dataKey="value" name="출현" fill={ACCENT} radius={[6,6,0,0]} />
                       </BarChart>
@@ -242,22 +242,31 @@ export default function MainPage() {
                   <PieChart>
                     <Tooltip />
                     <Legend 
-                        verticalAlign="bottom" 
-                        height={30} 
-                        wrapperStyle={{ fontSize: 11 }}
+                      layout="horizontal" 
+                      align="center" 
+                      verticalAlign="bottom"
+                      iconSize={10}
+                      wrapperStyle={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexWrap: "wrap",
+                        gap: 8,
+                        fontSize: 11,
+                        bottom: -6
+                      }}
                     />
                     <Pie
-                        data={stats.colorData}
-                        dataKey="value"
-                        nameKey="name"   // 색상 글자 포함 그대로 유지
-                        outerRadius={80}
-                        paddingAngle={2}
-                        label={false}      // 파이 조각 숫자 라벨 제거
-                        labelLine={false}  // 라벨 가이드 라인 제거
-                        >
-                        {(stats.colorData || []).map((_, i) => (
-                            <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                        ))}
+                      data={stats.colorData}
+                      dataKey="value"
+                      nameKey="name"
+                      outerRadius={80}
+                      paddingAngle={2}
+                      label={false}
+                      labelLine={false}
+                    >
+                      {(stats.colorData || []).map((_, i) => (
+                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                      ))}
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
@@ -412,6 +421,7 @@ export default function MainPage() {
                   overflow: "hidden",
                   boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
                   marginBottom: 8,
+                  height: "100%",
                 }}
               >
                 <img
@@ -419,9 +429,15 @@ export default function MainPage() {
                   alt="AI 추천 일러스트"
                   style={{
                     display: "block",
-                    width: "100%",
+                    maxWidth: "100%",
                     height: "auto",
                     objectFit: "cover",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-40%, -40%)",
+                    width: "80%",
+                    
                   }}
                 />
 
@@ -430,7 +446,7 @@ export default function MainPage() {
                   onClick={() => alert("추천 로직 연결 필요")}
                   style={{
                     position: "absolute",
-                    top: "35%",     // ← 막대 왼쪽 대각선 위에 맞춰 조정
+                    top: "40%",     // ← 막대 왼쪽 대각선 위에 맞춰 조정
                     left: "20%",    // ← 좌표 조절
                     transform: "translate(-50%, -50%)",
                     padding: "10px 16px",
