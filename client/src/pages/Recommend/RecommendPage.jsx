@@ -1,114 +1,59 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./recommend.css";
 import { api } from "../../api/client";
 
 function ballColor(n) {
   const x = Number(n);
-  if (x >= 1 && x <= 10) return "#F2C600";
-  if (x >= 11 && x <= 20) return "#2F7FD9";
-  if (x >= 21 && x <= 30) return "#D64545";
-  if (x >= 31 && x <= 40) return "#8B8F98";
-  return "#3AA76D";
+  if (x >= 1 && x <= 10) return "#fbc400";
+  if (x >= 11 && x <= 20) return "#69c8f2";
+  if (x >= 21 && x <= 30) return "#ff7272";
+  if (x >= 31 && x <= 40) return "#aaaaaa";
+  return "#b0d840";
 }
 
-function mulberry32(seed) {
-  let t = seed + 0x6D2B79F5;
-  return function () {
-    t += 0x6D2B79F5;
-    let r = Math.imul(t ^ (t >>> 15), 1 | t);
-    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function generateNumbers(settings) {
-  const seed = JSON.stringify(settings).split("").reduce((s, c) => s + c.charCodeAt(0), 0);
-  const rnd = mulberry32(seed + Math.floor(Date.now() / 1000));
-
-  const pool = Array.from({ length: 45 }, (_, i) => i + 1);
-  const ranges = { yellow:[1,10], blue:[11,20], red:[21,30], gray:[31,40], green:[41,45] };
-  const anyColor = Object.values(settings.colors).some(Boolean);
-
-  let weighted = [];
-  if (anyColor) {
-    Object.entries(settings.colors).forEach(([k,on])=>{
-      if(!on) return;
-      const [a,b]=ranges[k]; for(let n=a;n<=b;n++) weighted.push(n);
-    });
-    if (weighted.length < 6) weighted = pool.slice();
-  } else {
-    weighted = pool.slice();
-  }
-
-  const pickUnique = (cnt, src) => {
-    const s = new Set();
-    while (s.size < cnt && s.size < src.length) {
-      s.add(src[Math.floor(rnd() * src.length)]);
-    }
-    return Array.from(s);
-  };
-
-  let arr = pickUnique(6, weighted).sort((a,b)=>a-b);
-
-  if (settings.parity !== "none") {
-    const [oddT, evenT] = settings.parity.split("-").map(Number);
-    let odds = arr.filter(n=>n%2===1);
-    let evens= arr.filter(n=>n%2===0);
-
-    const addFrom = wantOdd => {
-      for(let i=0;i<300;i++){
-        const c = weighted[Math.floor(rnd()*weighted.length)];
-        if((c%2===1)===wantOdd && !odds.includes(c) && !evens.includes(c)) return c;
-      }
-      return null;
-    };
-
-    while(odds.length>oddT){ evens.push(odds.pop()); }
-    while(evens.length>evenT){ odds.push(evens.pop()); }
-    while(odds.length<oddT){ const p=addFrom(true);  if(p==null)break; odds.push(p); }
-    while(evens.length<evenT){ const p=addFrom(false); if(p==null)break; evens.push(p); }
-
-    arr = odds.concat(evens).slice(0,6).sort((a,b)=>a-b);
-  }
-
-  let bonus = weighted[Math.floor(rnd()*weighted.length)];
-  while(arr.includes(bonus)){ bonus = weighted[Math.floor(rnd()*weighted.length)]; }
-  return { numbers: arr, bonus };
+async function getHistory(limit = 2000) {
+  const { data } = await api.get(`/lotto/history?limit=${limit}`);
+  return data;
 }
 
 export default function RecommendPage() {
-  const [nick, setNick] = useState("회원님");
-  const [userLoading, setUserLoading] = useState(true);
+  const [nick, setNick] = useState("비회원");
+  const [latestDraw, setLatestDraw] = useState(0);
 
   useEffect(() => {
-    let alive = true;
-
     (async () => {
       try {
-        setUserLoading(true);
         const { data: me } = await api.get("/auth/me");
-        if (!alive) return;
-        const next = me?.nickname || me?.name || me?.email || "회원님";
-        setNick(next);
-      } catch {
-        setNick("회원님");
-      } finally {
-        if (alive) setUserLoading(false);
+        // prefer DB `name` column; fall back to other fields if present
+        const userName = me?.name;
+        setNick(userName ? userName : "비회원");
+      } catch (err) {
+        console.error("로그인 사용자 정보 불러오기 실패:", err);
+        setNick("비회원");
       }
     })();
-
-    const onAuthChanged = (e) => {
-      const me = e?.detail || {};
-      const next = me?.nickname || me?.name || me?.email || "회원님";
-      setNick(next);
-    };
-    window.addEventListener("auth-changed", onAuthChanged);
-    return () => {
-      alive = false;
-      window.removeEventListener("auth-changed", onAuthChanged);
-    };
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getHistory();
+        if (Array.isArray(data) && data.length > 0) {
+          setLatestDraw(Number(data[0].draw_number));
+          // Optional: store bonus for UI display
+          setResult(prev => ({ ...prev, bonus: data[0].bonus_number }));
+        } else {
+          setLatestDraw(0);
+        }
+      } catch (err) {
+        console.error("최근 회차 불러오기 실패:", err);
+        setLatestDraw(0);
+      }
+    })();
+  }, []);
+
+  // 이하 기존 RecommendPage 코드 (설정/번호 생성/설명 등)
   const [settings, setSettings] = useState({
     freqBias: false,        // 출현 빈도
     trendYM: false,         // 연/월 트렌드
@@ -186,10 +131,69 @@ export default function RecommendPage() {
   const [result, setResult] = useState(null);
 
   const handleGenerate = async () => {
+    if (nick === "비회원") {
+      alert("해당 기능은 복분자 회원에게만 제공되는 기능입니다. 로그인 혹은 회원가입 후 생성 가능합니다.");
+      return;
+    }
     setLoading(true);
     try {
-      const fake = generateNumbers(settings);
-      setResult(fake);
+      // Prepare payload with keys in order of selection
+      const payload = {};
+      order.forEach(key => {
+        switch(key) {
+          case "freqBias":
+            payload.freq_bias = settings.freqBias;
+            break;
+          case "trendYM":
+            payload.trend_ym = settings.trendYM;
+            break;
+          case "bonusStats":
+            payload.bonus_stats = settings.bonusStats;
+            break;
+          case "range":
+            payload.range_even = settings.rangeEven;
+            payload.range_wide = settings.rangeWide;
+            break;
+          case "parity":
+            payload.parity = settings.parity;
+            break;
+          case "sumOn":
+            payload.sum_on = settings.sumOn;
+            break;
+          case "pairOn":
+            payload.pair_on = settings.pairOn;
+            break;
+          case "gapOn":
+            payload.gap_on = settings.gapOn;
+            break;
+          case "colors":
+            payload.colors = {
+              yellow: settings.colors.yellow,
+              blue: settings.colors.blue,
+              red: settings.colors.red,
+              gray: settings.colors.gray,
+              green: settings.colors.green,
+            };
+            break;
+          default:
+            break;
+        }
+      });
+      // Ensure to include all options even if not in order (for completeness)
+      // But since the instruction is to send in order and include all selected, 
+      // above loop covers selected options in order.
+
+      console.log("Payload sent to /recommend:", payload);
+      const { data } = await api.post("/recommend", payload);
+      // Ensure result includes bonus
+      setResult({
+        numbers: data.numbers ?? [],
+        bonus: data.bonus ?? null,
+        score: data.score ?? null
+      });
+    } catch (err) {
+      console.error("추천 번호 생성 실패:", err);
+      setResult(null);
     } finally {
       setLoading(false);
     }
@@ -250,6 +254,8 @@ export default function RecommendPage() {
     .filter(k => activeMap[k])
     .map(k => ({ key: k, ...detailByKey(k) }))
     .filter(Boolean);
+
+  const nextDraw = latestDraw + 1;
 
   return (
     <div className="rec-page">
@@ -375,29 +381,26 @@ export default function RecommendPage() {
               </button>
             </div>
 
-            <p className="rec-footnote">주의: 최적화 AI 번호 생성 서비스는 향후 제공 예정입니다.</p>
+            <p className="rec-footnote">
+              주의: ‘복분자’의 AI 기반 추천 기능으로 생성된 예상 로또 번호는 실제 로또6/45 당첨을 보장하지 않습니다.<br/>
+              단순 참고용으로만 사용하시고 반드시 본인의 판단에 따라 신중히 선택하십시오.
+            </p>
           </div>
         </section>
 
         {/* 오른쪽: 결과/설명 */}
         <section className="rec-right">
           <h2 className="res-title">
-            {userLoading ? (
-              "불러오는 중…"
-            ) : (
-              <>
-                <span style={{ color: "var(--brand)" }}>{nick}</span>님이 생성한{" "}
-                <span style={{ color: "var(--brand)" }}>1167회차</span> 당첨 예상 로또 번호
-              </>
-            )}
+            <span style={{ color: "var(--brand)" }}>{nick}</span>님이 생성한{" "}
+            <span style={{ color: "var(--brand)" }}>{nextDraw}</span>회차 당첨 예상 로또 번호
           </h2>
 
           <div className="res-balls">
-            {(result?.numbers ?? [11,17,25,36,39,45]).map((n,i)=>(
+            {(result?.numbers ?? [1,11,21,31,41,45]).map((n,i)=>(
               <span key={i} className="ball-pill" style={{background:ballColor(n)}}>{n}</span>
             ))}
             <span className="ball-plus">+</span>
-            <span className="ball-pill bonus">{result?.bonus ?? 3}</span>
+            <span className="ball-pill bonus">{result?.bonus ?? "-"}</span>
           </div>
 
           <div className="res-sections">
