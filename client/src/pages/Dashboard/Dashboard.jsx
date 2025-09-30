@@ -6,6 +6,8 @@ import {
 import useLottoStats from "../../hooks/useLottoStats";
 import { ACCENT } from "../../lib/lottoStats";
 import aiImg from "../../assets/image/5.png";
+import { useNavigate } from "react-router-dom";
+
 
 const GAP = 15;
 const PAD_V = 20;
@@ -40,8 +42,17 @@ const fmtMonth = (s) => {
 
 function ballSkin(hex) {
   return {
-    width: 100, height: 70, borderRadius: "100%", display: "inline-flex",
-    alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 26, letterSpacing: -0.5,
+    aspectRatio: "1 / 1",
+    width: "3.5rem",
+    maxWidth: "15vw",
+    borderRadius: "50%",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#fff",
+    fontWeight: 900,
+    fontSize: 26,
+    letterSpacing: -0.5,
     background: `radial-gradient(65% 65% at 30% 30%, #ffffff66, transparent 70%), linear-gradient(180deg, ${hex} 5%, ${hex}CC 100%)`,
     boxShadow: "inset 0 -6px 10px rgba(0,0,0,0.18), inset 0 2px 4px rgba(255,255,255,0.35), 0 6px 12px rgba(0,0,0,0.12)",
     border: "1px solid rgba(0,0,0,0.05)"
@@ -70,6 +81,7 @@ function formatDateDot(dateStr) {
 function eok(nWon) { return Math.round(Number(nWon || 0) / 100_000_000); }
 
 export default function MainPage() {
+  const navigate = useNavigate();
   const { rows, stats, loading, error } = useLottoStats({ fetchUrl: "/lotto/draws" });
   const [selNum, setSelNum] = useState(1);
   const monthlyData = useMemo(
@@ -443,7 +455,7 @@ export default function MainPage() {
 
                 <button
                   type="button"
-                  onClick={() => alert("추천 로직 연결 필요")}
+                  onClick={() => navigate("/lotto/recommend")}
                   style={{
                     position: "absolute",
                     top: "40%",     // ← 막대 왼쪽 대각선 위에 맞춰 조정

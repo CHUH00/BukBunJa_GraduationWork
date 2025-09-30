@@ -33,7 +33,7 @@ export default function FavoriteNumbers({ data = [] }) {
 
   return (
     <div style={{ width: "100%", height: "100%", minHeight: 180, transform: "translate(-20px, 8px)"}}>
-      <ResponsiveContainer width="100%" height={180}>
+      <ResponsiveContainer width="100%" height={220}>
         <BarChart data={rows} margin={{ top: 18, right: 8, bottom: 10, left: 0 }} className="fav-chart">
           <CartesianGrid strokeDasharray="3 3" stroke={SOFT_STROKE} />
           <XAxis
