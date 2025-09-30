@@ -13,6 +13,7 @@ from ..security import (
     create_access_token,
     JWT_SECRET,
     JWT_ALG,
+    MAX_BCRYPT_BYTES,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -35,6 +36,12 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == payload.email).first():
         raise HTTPException(status_code=400, detail="이미 가입된 이메일입니다.")
 
+    if len(payload.password.encode("utf-8")) > MAX_BCRYPT_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"비밀번호는 최대 {MAX_BCRYPT_BYTES}바이트까지만 가능합니다."
+        )
+
     user = User(
         email=payload.email,
         password_hash=hash_password(payload.password),
@@ -52,8 +59,18 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)):
 @router.post("/login")
 def login(payload: LoginIn, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
-    if not user or not verify_password(payload.password, user.password_hash):
+    if not user:
         raise HTTPException(status_code=400, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
+
+    try:
+        if not verify_password(payload.password, user.password_hash):
+            raise HTTPException(status_code=400, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"비밀번호는 최대 {MAX_BCRYPT_BYTES}바이트까지만 가능합니다."
+        )
+
     token = create_access_token(user.email)
     return {"access_token": token, "token_type": "bearer"}
 
@@ -84,6 +101,8 @@ class SetPasswordIn(BaseModel):
     def validate_password(cls, v: str) -> str:
         if len(v) < 8:
             raise ValueError("비밀번호는 8자 이상이어야 합니다.")
+        if len(v.encode("utf-8")) > MAX_BCRYPT_BYTES:
+            raise ValueError(f"비밀번호는 최대 {MAX_BCRYPT_BYTES}바이트까지만 가능합니다.")
         return v
 
 

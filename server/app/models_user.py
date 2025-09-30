@@ -12,10 +12,12 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     password_hash: Mapped[str] = mapped_column("password", String(255), nullable=False)
     name: Mapped[str] = mapped_column(String(50), nullable=False)
+    avatar: Mapped[str | None] = mapped_column(String(255), nullable=True)
     phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
     marketing_agree: Mapped[int] = mapped_column(Integer, default=0)
     privacy_agree: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    
 
 class PredictionJSON(Base):
     __tablename__ = "Prediction"

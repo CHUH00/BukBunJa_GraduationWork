@@ -106,7 +106,7 @@ export default function HistoryPage() {
                 loading={loadingMe}
                 nickname={me?.name || me?.nickname || "홍길순"}
                 email={me?.email || "test@test.com"}
-                avatarUrl={me?.avatar_url || "https://placehold.co/120x120?text=%F0%9F%91%A4"}
+                avatar={me?.avatar}
                 memo={"이번 주 나의 로또 번호 : 3, 19, 22, 34, 39, 42 + 24"}
               />
             </div>
