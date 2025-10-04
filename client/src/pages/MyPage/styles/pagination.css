@@ -1,0 +1,13 @@
+@import "./_tokens.css";
+
+.hp-pagination{
+  display:flex; justify-content:center; align-items:center;
+  gap:12px; margin-top:14px;
+  color:#825259; font-size:var(--fz-sm);
+}
+.hp-pagination button{ border:none; background:none; cursor:pointer; color:#5a2d33; }
+.hp-page-dot{
+  width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:8px; background:#f6e1e5; color:#6b3a42; font-weight:800;
+}
+.hp-page-dot.hp-active{ background:#4b0f15; color:#fff; }
