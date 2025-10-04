@@ -130,13 +130,13 @@ stacking_model = StackingClassifier(
 
 # 탐색할 하이퍼파라미터 그리드 정의 (ipynb 파일의 그리드를 그대로 사용)
 param_grid = {
-    'gb__n_estimators': [200],
-    'gb__max_depth': [3],
-    'rf__n_estimators': [100],
-    'rf__max_depth': [5],
-    'xgb__n_estimators': [100],
-    'xgb__max_depth': [3],
-    'final_estimator__C': [1.0]
+    'gb__n_estimators': [100, 200],
+    'gb__max_depth': [3, 5],
+    'rf__n_estimators': [100, 200],
+    'rf__max_depth': [5, 10],
+    'xgb__n_estimators': [100, 200],
+    'xgb__max_depth': [3, 5],
+    'final_estimator__C': [0.1, 1.0]
 }
 
 grid_search = GridSearchCV(
