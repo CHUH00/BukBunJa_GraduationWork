@@ -138,7 +138,7 @@ export default function HistoryPage() {
           </section>
 
           <section className="hp-section">
-            <h3 className="hp-section-title">많이 추천받은 번호</h3>
+            <h3 className="hp-section-title">사용자들이 많이 추천받은 번호</h3>
             <div className="hp-card">
               <FavoriteNumbers data={favoriteNumbers} />
             </div>

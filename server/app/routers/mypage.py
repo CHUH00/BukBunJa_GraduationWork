@@ -44,7 +44,7 @@ def get_user_history(
         raise HTTPException(status_code=401, detail="Not authenticated")
     
     # Prediction 조회
-    predictions = db.query(Prediction).filter(Prediction.user_id == current_user.user_id).all()
+    predictions = db.query(Prediction).filter(Prediction.user_id == current_user.id).all()
     
     results = []
     for p in predictions:

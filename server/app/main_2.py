@@ -59,10 +59,13 @@ class RecommendResponse(BaseModel):
 
 
 @ai_router.post("/recommend", response_model=RecommendResponse)
-async def ai_recommend(req: RecommendRequest, db: Session = Depends(get_db)):
+async def ai_recommend(req: RecommendRequest, db: Session = Depends(get_db), current_user: "User" = Depends(lambda: None)):
+    from .routers.auth import get_current_user
+    current_user: "User" = Depends(get_current_user)
+    user_id = current_user.user_id
+
     result = recommend_numbers(settings=req.settings, k=req.k, topn=req.topn)
 
-    user_id = 1
     latest_draw = db.query(LottoDraw).order_by(LottoDraw.회차.desc()).first()
     draw_number = latest_draw.회차 if latest_draw else 1
 
