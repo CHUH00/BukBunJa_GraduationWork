@@ -1,0 +1,45 @@
+:root{
+  --bg:#fdecee;
+  --card:#ffffff;
+  --line:#efe3e6;
+
+  --ink:#1a1a1a;
+  --brand:#7a0e0e;
+  --brand-soft:#7b4548;
+
+  --blue:#2f54eb;
+  --blue-200:#d6e0ff;
+  --blue-600:#1d39c4;
+
+  --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+  --fz-xs:12px; --fz-sm:13px; --fz-md:14px; --fz-lg:16px; --fz-xl:18px;
+
+  --row-h:48px;
+  --top-h:210px;
+  
+}
+@media (max-width:720px){
+  :root{
+    --top-h: 180px;
+  }
+}
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-layer:focus,
+.recharts-sector:focus,
+.recharts-rectangle:focus {
+  outline: none !important;
+}
+
+.fav-chart .recharts-wrapper:focus,
+.fav-chart .recharts-surface:focus,
+.fav-chart .recharts-rectangle:focus {
+  outline: none !important;
+}
+.pc-pie .recharts-wrapper:focus,
+.pc-pie .recharts-surface:focus,
+.pc-pie .recharts-sector:focus {
+  outline: none !important;
+}
+
+* { outline-color: transparent; }
