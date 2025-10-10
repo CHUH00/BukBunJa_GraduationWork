@@ -47,6 +47,8 @@ app.include_router(auth_router.router)
 app.include_router(auth_social.router)
 app.include_router(users_router.router)
 app.include_router(prediction.router)
+from .routers import mypage
+app.include_router(mypage.router)
 
 # ------------ AI 추천 라우터 ------------
 ai_router = APIRouter(tags=["AI"])

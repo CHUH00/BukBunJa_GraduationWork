@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis,
   Tooltip, CartesianGrid, LabelList, Cell
@@ -9,14 +9,40 @@ const SOFT   = "rgba(36,52,90,0.10)";
 const SOFT_STROKE = "rgba(0,0,0,0.10)";
 
 export default function FavoriteNumbers({ data = [] }) {
-  const rows = useMemo(
-    () => (data || []).map(d => ({ name: String(d.num), value: Number(d.count || 0) })),
-    [data]
-  );
-  const maxVal = useMemo(() => rows.reduce((m, d) => Math.max(m, d.value), 0), [rows]);
+  const [rows, setRows] = useState([]);
 
+  // 데이터 구조 변환 + 디버깅 (d.num에서 d.number로 변경)
+  useEffect(() => {
+    console.log("FavoriteNumbers raw data:", data);
+    if (!data || !Array.isArray(data)) {
+      setRows([]);
+      return;
+    }
+
+    const mapped = data.map(d => {
+      // 문자열로 넘어온 경우 parse
+      let num = d.number;
+      let count = d.count;
+      if (typeof num === "string") num = parseInt(num);
+      if (typeof count === "string") count = parseInt(count);
+      return { name: String(num), value: Number(count || 0) };
+    });
+    console.log("FavoriteNumbers mapped rows:", mapped);
+    setRows(mapped);
+  }, [data]);
+
+  const maxVal = useMemo(() => rows.reduce((m, d) => Math.max(m, d.value), 0), [rows]);
   const defaultIdx = rows.findIndex(d => d.value === maxVal);
   const [selectedIdx, setSelectedIdx] = useState(defaultIdx >= 0 ? defaultIdx : 0);
+
+  // selectedIdx 초기값이 rows가 변경될 때마다 반영되도록 수정
+  useEffect(() => {
+    if (defaultIdx >= 0) {
+      setSelectedIdx(defaultIdx);
+    } else {
+      setSelectedIdx(0);
+    }
+  }, [defaultIdx]);
 
   const SelectedOnlyLabel = (props) => {
     const { x, y, width, index, value } = props;

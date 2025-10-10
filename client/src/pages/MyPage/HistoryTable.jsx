@@ -1,5 +1,6 @@
 import React from "react";
 
+// 숫자에 따라 공 색깔을 반환하는 함수
 function ballColor(n) {
   const num = Number(n);
   if (num >= 1 && num <= 10) return "#fbc400";
@@ -10,6 +11,7 @@ function ballColor(n) {
 }
 
 export default function HistoryTable({ items = [], onDetail, pageSize = 0 }) {
+  console.log("Received items:", items);
   const fillers = Math.max(0, pageSize - items.length);
 
   return (
@@ -21,34 +23,51 @@ export default function HistoryTable({ items = [], onDetail, pageSize = 0 }) {
       </div>
 
       {items.map((it, i) => {
-        const prediction = it.sample_predictions?.[0] || {};
-        const predictionNumbers = it.sample_prediction_numbers?.[0] || {};
+        const prediction_id = it.prediction_id;
+        const draw_number = it.draw_number;
 
-        // numbers 배열 파싱
+        // recommended_numbers가 문자열로 들어올 경우 처리
+        const recommended_numbers = it.recommended_numbers || {};
         let numbersArr = [];
-        if (predictionNumbers.numbers) {
-          numbersArr = Array.isArray(predictionNumbers.numbers)
-            ? predictionNumbers.numbers
-            : typeof predictionNumbers.numbers === 'string'
-            ? JSON.parse(predictionNumbers.numbers)
-            : [];
+        if (recommended_numbers.numbers) {
+          try {
+            numbersArr = Array.isArray(recommended_numbers.numbers)
+              ? recommended_numbers.numbers
+              : JSON.parse(recommended_numbers.numbers);
+          } catch (err) {
+            console.error("추천 번호 파싱 오류:", recommended_numbers.numbers, err);
+            numbersArr = [];
+          }
         }
 
+        console.log(`회차: ${draw_number || "데이터 없음"}, 추천 번호:`, numbersArr);
+
+        const hasDrawNumber = draw_number != null && draw_number !== "";
+        const hasNumbers = numbersArr.length > 0;
+
         return (
-          <div key={prediction.prediction_id ?? i} className="ht-row" role="row">
-            {/* 회차 표시 */}
-            <div className="ht-col-round" role="cell">{prediction.draw_number}</div>
+          <div key={prediction_id ?? i} className="ht-row" role="row">
+            <div className="ht-col-round" role="cell">
+              {hasDrawNumber ? draw_number : "데이터 없음"}
+            </div>
             <div className="ht-balls ht-col-left" role="cell">
               <div className="balls-track">
-                {/* 추천받은 번호 */}
-                {numbersArr.map((n, idx) => (
-                  <span key={idx} className="ball" style={{ background: ballColor(n) }}>{n}</span>
-                ))}
-                {predictionNumbers.bonus_number != null && (
+                {hasNumbers ? (
                   <>
-                    <span className="ht-plus" aria-hidden="true">+</span>
-                    <span className="ball bonus">{predictionNumbers.bonus_number}</span>
+                    {numbersArr.map((n, idx2) => (
+                      <span key={idx2} className="ball" style={{ background: ballColor(n) }}>
+                        {n}
+                      </span>
+                    ))}
+                    {recommended_numbers.bonus_number != null && (
+                      <>
+                        <span className="ht-plus" aria-hidden="true">+</span>
+                        <span className="ball bonus">{recommended_numbers.bonus_number}</span>
+                      </>
+                    )}
                   </>
+                ) : (
+                  "데이터 없음"
                 )}
               </div>
             </div>
@@ -56,8 +75,8 @@ export default function HistoryTable({ items = [], onDetail, pageSize = 0 }) {
               <button
                 className="hp-btn-outline"
                 onClick={() => {
-                  if (prediction.settings) {
-                    const settingsData = typeof prediction.settings === 'string' ? JSON.parse(prediction.settings) : prediction.settings;
+                  if (it.settings) {
+                    const settingsData = it.settings;
                     const trueSettings = Object.entries(settingsData)
                       .filter(([_, v]) => v === true)
                       .map(([k]) => k);
@@ -69,7 +88,7 @@ export default function HistoryTable({ items = [], onDetail, pageSize = 0 }) {
                   }
                   onDetail?.(it);
                 }}
-                aria-label={`${prediction.draw_number}회차 상세 보기`}
+                aria-label={`${draw_number}회차 상세 보기`}
               >
                 {it.button || "자세히 보기"}
               </button>

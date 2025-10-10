@@ -155,7 +155,7 @@ export default function HistoryPage() {
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1}
           >
-            〈 Prev
+            〈 이전
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
@@ -174,7 +174,7 @@ export default function HistoryPage() {
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages}
           >
-            Next 〉
+            다음 〉
           </button>
         </nav>
       </div>
