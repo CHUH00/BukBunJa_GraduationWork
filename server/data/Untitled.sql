@@ -327,6 +327,10 @@ CREATE TABLE IF NOT EXISTS User (
 ) ENGINE=InnoDB;
 select * from User;
 
+-- avatar 컬럼 추가
+ALTER TABLE `User`
+  ADD COLUMN `avatar` VARCHAR(255) NULL AFTER `name`;
+
 -- 1-1-1) 개인정보 수집 및 이용 동의 컬럼 추가
 ALTER TABLE `User`
   ADD COLUMN `privacy_agree` TINYINT(1) NOT NULL DEFAULT 0 AFTER `phone`;

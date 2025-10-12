@@ -33,7 +33,7 @@ export async function searchRetailers(region) {
 ||||||| empty tree
 =======
 const envBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
-export const API_BASE = import.meta.env.DEV ? '' : envBase;
+export const API_BASE = envBase || '';
 
 async function handle(res) {
     if (res.ok) return res.json();

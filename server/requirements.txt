@@ -61,5 +61,20 @@ watchfiles==1.1.0
 websockets==15.0.1
 cryptography
 passlib[bcrypt]==1.7.4
+<<<<<<< HEAD
 python-jose[cryptography]==3.3.0
 >>>>>>> coolmean
+||||||| af82d5f
+python-jose[cryptography]==3.3.0
+=======
+python-jose[cryptography]==3.3.0
+python-multipart
+pydantic[email]
+httpx
+numpy
+xgboost
+scikit-learn
+pandas
+bcrypt==4.0.1
+passlib
+>>>>>>> 73e5c31d27de940a62cc3611260f0f9cf3a89c15
