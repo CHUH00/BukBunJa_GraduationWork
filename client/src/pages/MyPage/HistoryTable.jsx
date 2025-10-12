@@ -80,11 +80,7 @@ export default function HistoryTable({ items = [], onDetail, pageSize = 0 }) {
                     const trueSettings = Object.entries(settingsData)
                       .filter(([_, v]) => v === true)
                       .map(([k]) => k);
-                    if (trueSettings.length > 0) {
-                      alert("설정 정보 (true인 항목):\n" + trueSettings.join('\n'));
-                    } else {
-                      alert("설정 정보 중 true인 항목이 없습니다.");
-                    }
+                    console.log("활성화된 설정:", trueSettings);
                   }
                   onDetail?.(it);
                 }}
