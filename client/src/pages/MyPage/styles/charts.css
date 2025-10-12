@@ -1,0 +1,24 @@
+@import "./_tokens.css";
+
+.viz-list{
+  display:grid; grid-template-columns:1fr 1fr;
+  column-gap:12px; row-gap:8px; margin:0 auto; padding:0;
+  list-style:none; font-size:12px;
+}
+.viz-list li{ display:flex; align-items:center; gap:8px; }
+.viz-dot{ width:12px; height:12px; border-radius:4px; box-shadow:0 0 0 1px rgba(0,0,0,.06) inset; flex:0 0 12px; }
+
+.pref-card-title{ margin:0 0 8px; font-weight:800; color:#5b0a0a; }
+
+.pc-pie { min-height: 0; }
+
+.fav-card .recharts-wrapper:focus,
+.fav-card .recharts-surface:focus,
+.fav-card .recharts-rectangle:focus,
+.pc-pie .recharts-wrapper:focus,
+.pc-pie .recharts-surface:focus,
+.pc-pie .recharts-sector:focus {
+  outline: none !important;
+}
+
+* { outline-color: transparent; }

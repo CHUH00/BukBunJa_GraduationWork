@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import "./_tokens.css";
 
 .hp-wrap{ background:var(--bg); min-height:100vh; }
@@ -40,3 +41,41 @@
 
 
 
+||||||| empty tree
+=======
+@import "./_tokens.css";
+
+.hp-wrap{ background:var(--bg); min-height:100vh; }
+.hp-container{
+  margin:0 auto; padding:20px 30px; box-sizing:border-box;
+}
+.hp-page-title{ margin:0 0 20px; font-size:40px; font-weight:800; color:#213547; line-height:1.2; }
+
+.hp-grid{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:16px; align-items:stretch; margin-top:var(--sp-2); min-width:0;
+}
+.hp-section{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+.hp-section-title{ margin:0; padding:0 2px; font-size:var(--fz-lg); font-weight:800; color:#5b0a0a; }
+
+.hp-card, .hp-card--nochrome{
+  height:var(--top-h); min-height:var(--top-h);
+  display:flex; align-items:stretch; box-sizing:border-box; overflow:hidden;
+}
+.hp-card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:18px 16px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.hp-card--nochrome{ background:transparent; border:0; padding:0; box-shadow:none; }
+
+.viz{ position:relative; width:100%; height:100%; min-height:220px; }
+.viz > .recharts-responsive-container{ width:100% !important; height:100% !important; }
+
+@media (max-width:1024px){
+  .hp-grid{ grid-template-columns:1fr 1fr; }
+}
+@media (max-width:720px){
+  .hp-grid{ grid-template-columns:1fr; gap:12px; }
+  :root{ --top-h:212px; }
+}
+>>>>>>> coolmean
