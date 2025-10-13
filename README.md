@@ -105,3 +105,5 @@ curl http://localhost:8000/lotto/db-ping
 curl http://localhost:8000/lotto/latest
 curl "http://localhost:8000/lotto/history?limit=3"
 ```
+
+
