@@ -59,12 +59,6 @@ export default function HistoryTable({ items = [], onDetail, pageSize = 0 }) {
                         {n}
                       </span>
                     ))}
-                    {recommended_numbers.bonus_number != null && (
-                      <>
-                        <span className="ht-plus" aria-hidden="true">+</span>
-                        <span className="ball bonus">{recommended_numbers.bonus_number}</span>
-                      </>
-                    )}
                   </>
                 ) : (
                   "데이터 없음"
