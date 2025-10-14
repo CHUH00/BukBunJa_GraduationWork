@@ -91,12 +91,14 @@ export default function RecommendPage({ user }) {
   const mapSettingsToApiParams = (s) => {
     return {
       use_frequency: s.freqBias,
+      use_color: Object.values(s.colors).some(Boolean),
       use_trend: s.trendYM,
+      use_bonus: s.bonusStats,
       use_range: s.rangeEven || s.rangeWide,
       use_odd_even: s.parity !== "none",
       use_sum: s.sumOn,
       use_pair: s.pairOn,
-      use_color: Object.values(s.colors).some(Boolean),
+      use_gap: s.gapOn,
     };
   };
 

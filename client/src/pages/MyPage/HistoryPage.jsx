@@ -121,21 +121,39 @@ export default function HistoryPage() {
   // 모달 관리
   const [detail, setDetail] = useState(null);
 
-  const buildDetail = (it) => ({
-    title: `${me?.name || "사용자"}님이 생성한 ${
-      it.draw_number ?? it.prediction_id
-    }회차 예상 번호`,
-    numbers: it.recommended_numbers?.numbers || [],
-    bonus: it.recommended_numbers?.bonus_number,
-    rules: [
-      { title: "출현 빈도", desc: "자주 나온 번호에 가중치 부여" },
-      { title: "연/월별 트렌드", desc: "최근 회차 트렌드 반영" },
-      { title: "보너스 번호 통계", desc: "상대적으로 빈도가 높은 범위 우선" },
-      { title: "번호합", desc: "극단값 회피" },
-      { title: "번호 페어", desc: "동반 출현 조합 고려" },
-      { title: "번호 간격", desc: "연속/듬성 간격 완화" },
-    ],
-  });
+  const buildDetail = (it) => {
+    const ruleMap = {
+      use_frequency: { title: "출현 빈도", desc: "자주 나온 번호에 가중치 부여" },
+      use_color: { title: "색상 분포", desc: "원하는 공 색상 비율에 맞춰 조절함" },
+      use_trend: { title: "연/월별 트렌드", desc: "최근 회차 트렌드 반영" },
+      use_bonus: { title: "보너스 번호 통계", desc: "상대적으로 빈도가 높은 범위 우선" },
+      use_range: { title: "구간 분포", desc: "번호가 고르게 또는 퍼지도록 구간을 나눠 추천함" },
+      use_odd_even: { title: "홀짝 비율", desc: "홀/짝 개수를 균형있게 맞춰줌" },
+      use_sum: { title: "번호합", desc: "극단값 회피" },
+      use_pair: { title: "번호 페어", desc: "동반 출현 조합 고려" },
+      use_gap: { title: "번호 간격", desc: "연속/듬성 간격 완화" },
+    };
+
+    let rules = [];
+    const settings = it.settings || {};
+
+    if (Object.keys(settings).length === 0) {
+      // 설정이 없으면 기본 모든 규칙 표시
+      rules = Object.values(ruleMap);
+    } else {
+      // true인 규칙만 추가
+      for (const key in ruleMap) {
+        if (settings[key]) rules.push(ruleMap[key]);
+      }
+    }
+
+    return {
+      title: `${me?.name || "사용자"}님이 생성한 ${it.draw_number ?? it.prediction_id}회차 예상 번호`,
+      numbers: it.recommended_numbers?.numbers || [],
+      bonus: it.recommended_numbers?.bonus_number,
+      rules,
+    };
+  };
 
   const openDetail = (it) => setDetail(buildDetail(it));
   const closeDetail = () => setDetail(null);
@@ -224,14 +242,6 @@ export default function HistoryPage() {
                   {n}
                 </span>
               ))}
-              {detail.bonus != null && (
-                <>
-                  <span className="ht-plus" aria-hidden="true">
-                    +
-                  </span>
-                  <span className="ball bonus">{detail.bonus}</span>
-                </>
-              )}
             </div>
 
             <ol className="rule-list">
