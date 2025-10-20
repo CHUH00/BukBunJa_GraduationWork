@@ -62,7 +62,7 @@ DB_PASS=1234  ## 원하는 비밀번호
 
 ```bash
 cd server  
-python3.11 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate  
 pip install -r requirements.txt
 ```
@@ -93,6 +93,8 @@ make run
 ```bash
 cd client  
 npm install
+## 혹시 버전 충돌나면
+## npm audit fix
 npm run dev
 ```
 
