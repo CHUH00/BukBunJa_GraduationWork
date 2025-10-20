@@ -93,6 +93,8 @@ make run
 ```bash
 cd client  
 npm install
+## 혹시 버전 충돌나면
+## npm audit fix
 npm run dev
 ```
 
