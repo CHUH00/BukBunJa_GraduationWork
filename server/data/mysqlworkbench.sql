@@ -56,6 +56,8 @@ CREATE TABLE IF NOT EXISTS `LottoDraw` (
     `보너스번호` INT
 ) ENGINE=InnoDB;
 
+select * from LottoDraw;
+
 -- 4. Prediction – AI 추천 요청 기록 테이블
 CREATE TABLE IF NOT EXISTS `Prediction` (
     `prediction_id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,6 +69,8 @@ CREATE TABLE IF NOT EXISTS `Prediction` (
     FOREIGN KEY (`draw_number`) REFERENCES `LottoDraw`(`회차`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+select * from Prediction;
+
 -- 5. PredictionNumber – 추천된 번호 목록 테이블
 CREATE TABLE IF NOT EXISTS `PredictionNumber` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -75,6 +79,18 @@ CREATE TABLE IF NOT EXISTS `PredictionNumber` (
     `bonus_number` INT,
     FOREIGN KEY (`prediction_id`) REFERENCES `Prediction`(`prediction_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+select * from PredictionNumber;
+
+-- Safe Updates 끄기
+SET SQL_SAFE_UPDATES = 0;
+
+-- 전체 삭제
+DELETE FROM Prediction;
+DELETE FROM PredictionNumber;
+
+-- 다시 켜기 (선택)
+SET SQL_SAFE_UPDATES = 1;
 
 -- 6. lotto_retailers - 로또 판매점 위치 정보 테이블
 CREATE TABLE IF NOT EXISTS `lotto_retailers` (
@@ -85,6 +101,8 @@ CREATE TABLE IF NOT EXISTS `lotto_retailers` (
     `경도(lon)` DOUBLE,
     `count` INT DEFAULT 0
 );
+
+select * from lotto_retailers;
 
 ALTER TABLE `User`
   ADD COLUMN `avatar` VARCHAR(255) NULL AFTER `name`;
