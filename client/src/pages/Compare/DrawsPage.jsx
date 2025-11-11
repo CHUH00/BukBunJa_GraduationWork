@@ -105,7 +105,8 @@ export default function DrawsPage() {
                                     padding: "6px 10px",
                                     border: "1px solid #ccc",
                                     borderRadius: 6,
-                                    flex: "0 0 150px"
+                                    flex: "0 0 150px",
+                                    outline: "none"
                                 }}
                             />
                             <button

@@ -174,7 +174,7 @@ export default function ComparePage() {
                 justifyContent: "flex-end",
                 width: "100%"
             }}>
-                <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, alignItems: "center" }}>
                     <span style={{ fontWeight: 600 }}>회차 A : </span>
                     <input
                         type="number"
@@ -190,7 +190,8 @@ export default function ComparePage() {
                             background: "#fff",
                             borderRadius: 6,
                             width: 100,
-                            textAlign: "center"
+                            textAlign: "center",
+                            outline: "none"
                         }}
                     />
                 </div>
@@ -210,7 +211,8 @@ export default function ComparePage() {
                             background: "#fff",
                             borderRadius: 6,
                             width: 100,
-                            textAlign: "center"
+                            textAlign: "center",
+                            outline: "none"
                         }}
                     />
                 </div>

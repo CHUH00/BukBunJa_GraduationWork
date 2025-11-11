@@ -58,6 +58,15 @@ CREATE TABLE IF NOT EXISTS `LottoDraw` (
 
 select * from LottoDraw;
 
+-- Safe Updates 끄기
+SET SQL_SAFE_UPDATES = 0;
+
+-- 전체 삭제
+DELETE FROM LottoDraw;
+
+-- 다시 켜기 (선택)
+SET SQL_SAFE_UPDATES = 1;
+
 -- 4. Prediction – AI 추천 요청 기록 테이블
 CREATE TABLE IF NOT EXISTS `Prediction` (
     `prediction_id` INT AUTO_INCREMENT PRIMARY KEY,

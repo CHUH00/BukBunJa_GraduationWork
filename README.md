@@ -106,6 +106,12 @@ npm run dev
 curl http://localhost:8000/lotto/db-ping
 curl http://localhost:8000/lotto/latest
 curl "http://localhost:8000/lotto/history?limit=3"
+<<<<<<< HEAD
 ```
 
 
+||||||| 312051e
+```
+=======
+```
+>>>>>>> origin/coolmean

@@ -109,6 +109,7 @@ export default function Sidebar({ user, onLogout }) {
       <NavLink
         key={menu.path}
         to={menu.path}
+        onClick={() => setOpenMenu(null)}
         className={({ isActive }) => `${styles.link} ${isActive ? styles.activeLink : ""}`}
       >
         {menu.label}
