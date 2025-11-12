@@ -1,5 +1,5 @@
 ## 프로젝트 구조
-
+```
 lotto_dashboard/
 ├── client/                      # React + Vite 프론트엔드
 │   ├── src/                     # 프론트엔드 소스코드
@@ -30,7 +30,7 @@ lotto_dashboard/
 ├── .gitignore                    # Git에 포함하지 않을 파일 목록
 ├── README.md                     # 프로젝트 설명 문서
 └── ...
-
+```
 ## 환경 변수 관리
 
 - `server/.env`에는 **DB 비밀번호(민감정보)**가 포함됨  
